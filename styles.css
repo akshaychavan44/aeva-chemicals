@@ -396,14 +396,15 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
    CAPABILITIES — hover list
    ========================================================= */
 .capabilities {
-  --roll-color: var(--leaf);
-  background: var(--cream); color: var(--ink);
+  --roll-color: var(--mint);
+  background: #000000; color: #ffffff;
   padding: clamp(76px, 10vw, 130px) var(--gutter);
   text-align: center; position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: center;
   padding-top: clamp(40px, 5vw, 72px); /* sits close under Tailor-made */
 }
-.capabilities .eyebrow { margin-bottom: clamp(28px, 3vw, 48px); font-size: 13px; }
+.capabilities .eyebrow { margin-bottom: clamp(28px, 3vw, 48px); font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+.capabilities .cap-list .roll--big { color: #ffffff; }
 .cap-list li { line-height: 1.06; }
 /* sized so the longest line spans almost the full width */
 .cap-list .roll--big { font-size: clamp(30px, 5vw, 112px); letter-spacing: -.02em; }
