@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 5288;
+let port = Number(process.env.PORT) || 5288;
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -45,7 +45,16 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`\n  ➜  Local:   http://localhost:${PORT}/\n`);
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.warn(`\n  ⚠  Port ${port} is in use, trying http://localhost:${port + 1}...`);
+    port += 1;
+    server.listen(port);
+  } else {
+    console.error(err);
+  }
 });
 
+server.listen(port, () => {
+  console.log(`\n  ➜  Local:   http://localhost:${port}/\n`);
+});
