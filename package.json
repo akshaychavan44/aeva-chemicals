@@ -1,0 +1,11 @@
+{
+  "name": "aeva-chemicals",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aeva Chemicals landing page",
+  "scripts": {
+    "dev": "node dev.js",
+    "start": "node dev.js"
+  }
+}
+
