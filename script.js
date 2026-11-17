@@ -25,7 +25,7 @@
     const C = {
       dirtyTop: hex("#3b4a36"), dirtyDeep: hex("#0b1712"), // murky, spent dye liquor
       cleanTop: hex("#fbf3cf"), cleanDeep: hex("#e2c56a"),
-      gold: hex("#e8b84b"), ink: hex("#06201a"),
+      gold: hex("#e8b84b"), ink: hex("#06201a"), teal: hex("#2fae86"),
     };
 
     let w = 0, h = 0, dpr = 1, S = 400, fx = 0, fy = 0;
@@ -226,7 +226,7 @@
         const a = (1 - gone) * front;
         if (a < 0.02) continue;
         const s = d.s * px * (0.8 + front * 0.6) * 2.2;
-        ctx.fillStyle = mixc(d.teal ? [47, 174, 134] : C.ink, C.ink, 0, a * 0.85);
+        ctx.fillStyle = mixc(d.teal ? C.teal : C.ink, C.ink, 0, a * 0.85);
         ctx.beginPath(); ctx.arc(x, yy, s, 0, Math.PI * 2); ctx.fill();
         if (hold > 0.05) { // held: a gold ring of polymer round each speck
           ctx.strokeStyle = mixc(C.gold, C.gold, 0, a * hold * 0.9);
@@ -431,99 +431,24 @@
     walk(el);
   }
 
-  /* ---------- Hero: oil bubbles drifting on gold ----------
-     The bubbles from the old spiral clip, without the tube: clear oil bubbles
-     with dark refracted rims, flowing left to right along a slow wave. */
+  /* ---------- Hero: the AeSop pour ----------
+     Plays once as the preloader's curtains part, then rests on its last frame
+     (the filled flask). With reduced motion it shows that last frame as a still. */
   (() => {
-    const canvas = $(".hero__bubbles");
-    const ctx = canvas && canvas.getContext("2d");
-    if (!ctx) return;
-    const RIM = "59, 53, 1"; // the olive-black bubble edge in the clip
-    let w = 0, h = 0, dpr = 1, bubbles = [], raf = 0, last = 0, t = 0, onScreen = true;
-
-    const make = (spread) => {
-      const r = Math.random() < 0.55 ? 2 + Math.random() * 5 : 7 + Math.random() ** 1.6 * 30;
-      const depth = 0.45 + Math.random() * 0.55; // far bubbles are smaller, fainter, slower
-      return {
-        x: spread ? Math.random() * (w + 120) - 60 : -r * 3 - Math.random() * 80,
-        lane: (Math.random() + Math.random() + Math.random() - 1.5) * h * 0.34,
-        r: r * depth * Math.min(1.25, Math.max(0.7, w / 1400)),
-        depth,
-        speed: (18 + Math.random() * 34) * depth,
-        rise: 3 + Math.random() * 9,
-        phase: Math.random() * Math.PI * 2,
-        twin: r > 9 && Math.random() < 0.22, // the "8"-shaped pairs from the clip
-      };
-    };
-
-    const resize = () => {
-      w = canvas.offsetWidth; h = canvas.offsetHeight; // layout size, ignoring the intro zoom
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      const n = Math.round(Math.min(80, Math.max(30, (w * h) / 20000)));
-      bubbles = Array.from({ length: n }, () => make(true));
-    };
-
-    // the invisible stream the bubbles follow: a slow, wide wave across the middle
-    const pathY = (x) => h * 0.56 + Math.sin((x / w) * Math.PI * 2.2 + t * 0.12) * h * 0.1;
-
-    const drawBubble = (x, y, r, a, wob) => {
-      const rx = r * (1 + wob), ry = r * (1 - wob);
-      if (r < 4.5) {
-        ctx.fillStyle = `rgba(${RIM}, ${0.75 * a})`;
-        ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
-        return;
-      }
-      const g = ctx.createRadialGradient(x - r * 0.25, y - r * 0.3, r * 0.1, x, y, r);
-      g.addColorStop(0, `rgba(255, 252, 200, ${0.35 * a})`);
-      g.addColorStop(0.75, `rgba(240, 235, 120, ${0.12 * a})`);
-      g.addColorStop(1, `rgba(${RIM}, ${0.25 * a})`);
-      ctx.fillStyle = g;
-      ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.lineWidth = Math.max(1.2, r * 0.16);
-      ctx.strokeStyle = `rgba(${RIM}, ${0.85 * a})`;
-      ctx.stroke();
-      ctx.lineWidth = Math.max(1, r * 0.08);
-      ctx.strokeStyle = `rgba(255, 255, 235, ${0.55 * a})`;
-      ctx.beginPath(); ctx.ellipse(x, y, rx * 0.68, ry * 0.68, 0, Math.PI * 1.08, Math.PI * 1.45); ctx.stroke();
-    };
-
-    const draw = () => {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, w, h);
-      for (const b of bubbles) {
-        const y = pathY(b.x) + b.lane + Math.sin(t * 0.8 + b.phase) * b.r * 0.6;
-        const fade = Math.min(1, (b.x + 60) / 160, (w + 60 - b.x) / 160);
-        const a = Math.max(0, fade) * (0.35 + b.depth * 0.65);
-        const wob = Math.sin(t * 1.6 + b.phase) * 0.06;
-        drawBubble(b.x, y, b.r, a, wob);
-        if (b.twin) drawBubble(b.x, y + b.r * 1.55, b.r * 0.72, a, -wob);
-      }
-    };
-
-    const frame = (now) => {
-      const dt = Math.min(0.05, (now - (last || now)) / 1000);
-      last = now; t += dt;
-      for (let i = 0; i < bubbles.length; i++) {
-        const b = bubbles[i];
-        b.x += b.speed * dt;
-        b.lane -= b.rise * dt;
-        if (b.x - b.r * 3 > w + 60 || b.lane < -h * 0.7) bubbles[i] = make(false);
-      }
-      draw();
-      raf = onScreen ? requestAnimationFrame(frame) : 0;
-    };
-
-    resize();
-    draw();
-    let rt = 0;
-    addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { resize(); draw(); }, 150); });
-    if (reduced) return;
+    const video = $(".hero__video");
+    if (!video) return;
+    if (reduced) {
+      video.poster = video.dataset.end;
+      video.removeAttribute("preload");
+      return;
+    }
+    const play = () => video.play().catch(() => { video.poster = video.dataset.end; });
+    setTimeout(play, 1700); // the curtains start opening at 2s
+    // Pause when scrolled away; resume if it had not finished.
     new IntersectionObserver(([e]) => {
-      onScreen = e.isIntersecting;
-      if (onScreen && !raf) { last = 0; raf = requestAnimationFrame(frame); }
-    }).observe(canvas);
+      if (!e.isIntersecting) video.pause();
+      else if (!video.ended && video.currentTime > 0) play();
+    }).observe(video);
   })();
 
   /* ---------- Hero title ---------- */
@@ -576,28 +501,11 @@
     (entries) => entries.forEach((e) => {
       if (!e.isIntersecting) return;
       e.target.classList.add("is-in");
-      e.target.querySelectorAll("[data-count]").forEach(countUp);
-      if (e.target.matches("[data-count]")) countUp(e.target);
       io.unobserve(e.target);
     }),
     { threshold: 0.18, rootMargin: "0px 0px -6% 0px" }
   );
   $$(".reveal-up, .reveal-words").forEach((el) => io.observe(el));
-
-  function countUp(el) {
-    if (el.dataset.done) return;
-    el.dataset.done = 1;
-    const end = +el.dataset.count;
-    const dur = reduced ? 0 : 1800;
-    const t0 = performance.now();
-    const tick = (t) => {
-      const p = dur ? Math.min((t - t0) / dur, 1) : 1;
-      const eased = 1 - Math.pow(1 - p, 4);
-      el.textContent = Math.round(end * eased).toLocaleString("en-IN");
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }
 
   /* ---------- Nav ---------- */
   const nav = $("#nav");

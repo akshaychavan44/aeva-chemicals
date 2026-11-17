@@ -1,8 +1,10 @@
+// Local static server for the site. `pnpm dev` (or `node dev.js`); PORT overrides 5288,
+// and if the port is busy it moves to the next free one.
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-let port = Number(process.env.PORT) || 5288;
+const ROOT = __dirname;
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -16,45 +18,42 @@ const MIME = {
   '.mp4': 'video/mp4',
   '.pdf': 'application/pdf',
   '.woff2': 'font/woff2',
-  '.woff': 'font/woff',
-  '.ttf': 'font/ttf',
-  '.otf': 'font/otf',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+};
+
+let port = Number(process.env.PORT) || 5288;
+
+const notFound = (res) => {
+  res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+  res.end('404 Not Found');
 };
 
 const server = http.createServer((req, res) => {
-  let reqPath = decodeURI(req.url.split('?')[0]);
-  if (reqPath.startsWith('/aeva-chemicals/')) {
-    reqPath = reqPath.replace('/aeva-chemicals', '');
+  let urlPath;
+  try {
+    urlPath = decodeURIComponent(req.url.split('?')[0]);
+  } catch {
+    return notFound(res); // malformed escape in the URL
   }
-  let filePath = path.join(__dirname, reqPath === '/' ? 'index.html' : reqPath);
+  // GitHub Pages serves the site under /aeva-chemicals/, so accept that prefix too.
+  urlPath = urlPath.replace(/^\/aeva-chemicals(?=\/)/, '');
 
-  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
-    filePath = path.join(filePath, 'index.html');
-  }
+  let filePath = path.join(ROOT, urlPath);
+  // Never serve anything outside the project folder.
+  if (filePath !== ROOT && !filePath.startsWith(ROOT + path.sep)) return notFound(res);
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) filePath = path.join(filePath, 'index.html');
 
   fs.readFile(filePath, (err, data) => {
-    if (err) {
-      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-      res.end('404 Not Found');
-      return;
-    }
-    const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
+    if (err) return notFound(res);
+    res.writeHead(200, { 'Content-Type': MIME[path.extname(filePath).toLowerCase()] || 'application/octet-stream' });
     res.end(data);
   });
 });
 
 server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.warn(`\n  ⚠  Port ${port} is in use, trying http://localhost:${port + 1}...`);
-    port += 1;
-    server.listen(port);
-  } else {
-    console.error(err);
-  }
+  if (err.code !== 'EADDRINUSE') throw err;
+  console.warn(`  Port ${port} is in use, trying ${port + 1}...`);
+  server.listen(++port);
 });
 
-server.listen(port, () => {
-  console.log(`\n  ➜  Local:   http://localhost:${port}/\n`);
-});
+server.listen(port, () => console.log(`\n  ➜  Local:   http://localhost:${port}/\n`));

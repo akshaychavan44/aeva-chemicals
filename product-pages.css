@@ -1,6 +1,6 @@
 /* Product pages share the homepage's Jost / IBM Plex Mono typography. */
 .p-label { font: 400 11px/1.6 "IBM Plex Mono", monospace; letter-spacing: .13em; text-transform: uppercase; color: var(--leaf); }
-.product-page { background: var(--paper); color: var(--ink); }
+.product-page { background: var(--cream); color: var(--ink); }
 /* frosted cream glass, matching the home page header once scrolled */
 .product-page .nav:not(.is-open) {
   background: rgba(244, 241, 232, .55);
@@ -17,11 +17,11 @@
 .p-skip:focus { top: 12px; }
 .p-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .p-breadcrumb { max-width: 1440px; margin: auto; padding: 26px var(--gutter); display: flex; gap: 16px; font-size: 13px; color: var(--ink-mute); }
-.p-breadcrumb a:hover { color: var(--forest); }
+.p-breadcrumb a:hover { color: var(--emerald); }
 .p-hero { max-width: 1440px; margin: 0 auto; padding: 25px var(--gutter) 75px; display: grid; grid-template-columns: 1fr; gap: clamp(32px, 6vw, 90px); align-items: center; }
 .p-hero__copy { animation: productEnter .75s ease-out both; }
 @keyframes productEnter { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-.p-hero h1 { margin-top: 20px; color: var(--forest); font-size: clamp(64px, 7vw, 108px); font-weight: 500; letter-spacing: -.05em; line-height: 1; }
+.p-hero h1 { margin-top: 20px; color: var(--emerald); font-size: clamp(64px, 7vw, 108px); font-weight: 500; letter-spacing: -.05em; line-height: 1; }
 .p-category { margin-top: 12px; font-size: 18px; color: var(--ink-mute); }
 .p-hero h2 { margin-top: 35px; font-size: clamp(30px, 3vw, 46px); line-height: 1.12; font-weight: 400; letter-spacing: -.025em; }
 .p-description { font-size: 18px; line-height: 1.65; margin-top: 23px; color: var(--ink-soft); max-width: 565px; }
@@ -30,7 +30,7 @@
 .p-text-link { font-size: 14px; border-bottom: 1px solid var(--leaf); padding: 12px 0; }
 .p-text-link span { margin-left: 10px; }
 .p-form { font: 400 10px/1.6 "IBM Plex Mono", monospace; letter-spacing: .08em; border-top: 1px solid var(--line); padding-top: 20px; margin-top: 30px; color: var(--ink-mute); }
-.p-form strong { font-weight: 400; color: var(--forest); margin-left: 14px; }
+.p-form strong { font-weight: 400; color: var(--emerald); margin-left: 14px; }
 .p-benefits { padding: 55px var(--gutter); display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; background: var(--tint); }
 .p-index { font: 400 11px "IBM Plex Mono", monospace; color: var(--leaf); }
 .p-benefits h3, .p-steps h3 { margin-top: 18px; margin-bottom: 12px; font-size: 23px; font-weight: 500; letter-spacing: -.015em; }
@@ -53,18 +53,18 @@
 .p-note { font-size: 14px; color: var(--ink-mute); line-height: 1.7; margin-top: 26px; max-width: 880px; }
 .p-documents { display: grid; grid-template-columns: 1fr 1fr; padding: 80px var(--gutter); gap: 50px; }
 .p-document-links a { display: flex; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); padding: 22px 0; font-size: 18px; }
-.p-document-links a:hover { color: var(--forest-3); }
+.p-document-links a:hover { color: var(--leaf); }
 .p-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 22px; padding: 30px var(--gutter); background: var(--emerald); color: var(--cream-soft); font-size: 13px; }
-.product-overview { padding: 85px var(--gutter); background: var(--paper); color: var(--ink); scroll-margin-top: 72px; }
+.product-overview { padding: 85px var(--gutter); background: var(--cream); color: var(--ink); scroll-margin-top: 72px; }
 .product-overview__head { margin-bottom: 42px; }
 .product-overview__head h2 { font-size: clamp(38px, 5vw, 68px); font-weight: 400; line-height: 1.1; letter-spacing: -.03em; margin: 20px 0; }
 .product-overview__head > p:last-child { font-size: 18px; color: var(--ink-soft); }
 .product-overview__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
 .product-overview__card { border: 1px solid var(--line); background: var(--cream); }
 .product-overview__copy { padding: 30px; }
-.product-overview__copy h3 { font-size: 50px; font-weight: 500; letter-spacing: -.03em; color: var(--forest); margin: 10px 0 15px; }
+.product-overview__copy h3 { font-size: 50px; font-weight: 500; letter-spacing: -.03em; color: var(--emerald); margin: 10px 0 15px; }
 .product-overview__copy > p:not(.p-label) { color: var(--ink-soft); font-size: 16px; line-height: 1.65; max-width: 530px; }
-.product-overview__link { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 18px; margin-top: 25px; font-size: 16px; color: var(--forest); }
+.product-overview__link { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 18px; margin-top: 25px; font-size: 16px; color: var(--emerald); }
 @media (max-width: 900px) {
   .p-hero { gap: 30px; }
   .p-benefits, .p-steps { gap: 25px; }
@@ -90,6 +90,6 @@
 /* Product information leads; there are no product or packaging photographs. */
 .p-hero__copy { max-width: 1000px; }
 .p-description { max-width: 760px; }
-.product-overview__card { display: flex; border-top: 3px solid var(--forest); }
+.product-overview__card { display: flex; border-top: 3px solid var(--emerald); }
 .product-overview__copy { display: flex; flex-direction: column; width: 100%; }
 .product-overview__copy > p:not(.p-label) { flex: 1; }

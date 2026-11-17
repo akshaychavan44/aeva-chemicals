@@ -8,166 +8,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261104c" />
-  <link rel="stylesheet" href="product-pages.css?v=20261103c" />
-<style id="aeva-cinematic-loader-styles">
-  /* Cinematic Preloader Container */
-  .aeva-cinematic-loader {
-    position: fixed;
-    inset: 0;
-    z-index: 9999999;
-    pointer-events: auto;
-    overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-    background: transparent;
-  }
-
-  /* Top & Bottom Curtains */
-  .aeva-curtain {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 50.5vh;
-    background: #080e0c;
-    will-change: transform;
-    transition: transform 2.0s cubic-bezier(0.77, 0, 0.175, 1);
-  }
-
-  .aeva-curtain--top {
-    top: 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    transform: translateY(0);
-    border-bottom: 1px solid rgba(232, 184, 75, 0.25);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-  }
-
-  .aeva-curtain--bottom {
-    bottom: 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    transform: translateY(0);
-    border-top: 1px solid rgba(232, 184, 75, 0.25);
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
-  }
-
-  /* Word wrappers inside each curtain */
-  .aeva-curtain-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    will-change: transform, opacity;
-    transition: transform 2.0s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .aeva-curtain-inner--top {
-    padding-bottom: clamp(14px, 2.6vh, 32px);
-    transform: translateY(0);
-  }
-
-  .aeva-curtain-inner--bottom {
-    padding-top: clamp(14px, 2.6vh, 32px);
-    transform: translateY(0);
-  }
-
-  /* AEVA typography */
-  .aeva-word--aeva {
-    font-family: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: clamp(38px, 8.5vw, 105px);
-    font-weight: 900;
-    color: #f4f1e8;
-    letter-spacing: clamp(6px, 1.4vw, 18px);
-    text-transform: uppercase;
-    line-height: 0.9;
-    margin: 0;
-    text-shadow: 0 0 45px rgba(232, 184, 75, 0.18), 0 0 80px rgba(11, 107, 79, 0.25);
-    animation: aevaGlowPulse 2s ease-in-out infinite alternate;
-  }
-
-  /* CHEMICALS typography */
-  .aeva-word--chemicals {
-    font-family: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: clamp(22px, 5vw, 62px);
-    font-weight: 900;
-    color: #e8b84b;
-    letter-spacing: clamp(4px, 1.1vw, 14px);
-    text-indent: clamp(4px, 1.1vw, 14px);
-    text-transform: uppercase;
-    line-height: 0.95;
-    margin: 0;
-    text-shadow: 0 0 45px rgba(232, 184, 75, 0.28), 0 0 80px rgba(11, 107, 79, 0.2);
-    animation: aevaGlowPulse 2s ease-in-out infinite alternate;
-  }
-
-  /* Center divider hairline */
-  .aeva-divider-line {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: min(520px, 84vw);
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(232, 184, 75, 0.5) 20%, rgba(244, 241, 232, 0.95) 50%, rgba(232, 184, 75, 0.5) 80%, transparent);
-    z-index: 10;
-    will-change: transform, opacity;
-    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.0s ease;
-    pointer-events: none;
-  }
-
-  @keyframes aevaGlowPulse {
-    0% { opacity: 0.94; text-shadow: 0 0 25px rgba(232, 184, 75, 0.12); }
-    100% { opacity: 1; text-shadow: 0 0 50px rgba(232, 184, 75, 0.32), 0 0 90px rgba(11, 107, 79, 0.35); }
-  }
-
-  /* Cinematic Reveal Animations */
-  .aeva-cinematic-loader.is-revealed .aeva-curtain--top {
-    transform: translateY(-100%);
-  }
-
-  .aeva-cinematic-loader.is-revealed .aeva-curtain--bottom {
-    transform: translateY(100%);
-  }
-
-  .aeva-cinematic-loader.is-revealed .aeva-curtain-inner--top {
-    transform: translateY(-110px);
-    opacity: 0;
-  }
-
-  .aeva-cinematic-loader.is-revealed .aeva-curtain-inner--bottom {
-    transform: translateY(110px);
-    opacity: 0;
-  }
-
-  .aeva-cinematic-loader.is-revealed .aeva-divider-line {
-    transform: translate(-50%, -50%) scaleX(0);
-    opacity: 0;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .aeva-curtain,
-    .aeva-curtain-inner,
-    .aeva-divider-line {
-      transition-duration: 0.3s !important;
-    }
-    .aeva-word--aeva {
-      animation: none !important;
-    }
-  }
-</style>
+  <link rel="stylesheet" href="styles.css?v=20261117d" />
+  <link rel="stylesheet" href="product-pages.css?v=20261117" />
 </head>
 <body>
   <!-- ============ CINEMATIC PRELOADER ============ -->
-  <div class="aeva-cinematic-loader" id="aevaCinematicLoader" aria-label="Loading Aeva Chemicals" role="status">
+  <div class="aeva-cinematic-loader" id="aevaCinematicLoader" aria-hidden="true">
     <div class="aeva-curtain aeva-curtain--top">
       <div class="aeva-curtain-inner aeva-curtain-inner--top">
-        <h1 class="aeva-word aeva-word--aeva">AEVA</h1>
+        <p class="aeva-word aeva-word--aeva">AEVA</p>
       </div>
     </div>
-    <div class="aeva-divider-line" id="aevaDividerLine" aria-hidden="true"></div>
+    <div class="aeva-divider-line"></div>
     <div class="aeva-curtain aeva-curtain--bottom">
       <div class="aeva-curtain-inner aeva-curtain-inner--bottom">
         <p class="aeva-word aeva-word--chemicals">CHEMICALS</p>
@@ -175,21 +27,15 @@
     </div>
   </div>
   <script>
+    // Hold the page still for two seconds, part the curtains, then remove the loader.
     (() => {
       const loader = document.getElementById("aevaCinematicLoader");
-      if (!loader) return;
-      const docEl = document.documentElement;
-      const prevOverflow = docEl.style.overflow;
-      docEl.style.overflow = "hidden";
-
-      // Preloader displays for exactly 2 seconds, then curtain opens
+      const root = document.documentElement;
+      root.style.overflow = "hidden";
       setTimeout(() => {
         loader.classList.add("is-revealed");
-        docEl.style.overflow = prevOverflow || "";
-        setTimeout(() => {
-          loader.style.display = "none";
-          loader.setAttribute("aria-hidden", "true");
-        }, 2000);
+        root.style.overflow = "";
+        setTimeout(() => loader.remove(), 2000);
       }, 2000);
     })();
   </script>
@@ -219,9 +65,11 @@
 
   <main id="top">
 
-    <!-- ============ HERO (oil bubbles on gold, drawn in script.js) ============ -->
+    <!-- ============ HERO (AeSop pour film; script.js plays it once the curtains open) ============ -->
     <section class="hero">
-      <canvas class="hero__bubbles" aria-hidden="true"></canvas>
+      <video class="hero__video" muted playsinline preload="auto" poster="assets/hero-flow-poster.jpg" data-end="assets/hero-flow-end.jpg" aria-hidden="true">
+        <source src="assets/hero-flow.mp4" type="video/mp4" />
+      </video>
       <div class="hero__shade"></div>
       <div class="grain"></div>
 
@@ -366,6 +214,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=20261103y"></script>
+  <script src="script.js?v=20261117b"></script>
 </body>
 </html>
