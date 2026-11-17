@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261117d" />
-  <link rel="stylesheet" href="product-pages.css?v=20261117" />
+  <link rel="stylesheet" href="styles.css?v=20261117f" />
+  <link rel="stylesheet" href="product-pages.css?v=20261117f" />
 </head>
 <body>
   <!-- ============ CINEMATIC PRELOADER ============ -->
@@ -51,7 +51,7 @@
           <path d="M15.2 32.3 L32.2 32.3" stroke-width="3" stroke-linecap="butt" />
         </g>
         <g fill="currentColor"><circle cx="1.9" cy="18.8" r="1.6"/><circle cx="45.8" cy="18.8" r="1.6"/><circle cx="10" cy="45" r="1.9"/><circle cx="37.3" cy="45" r="1.9"/></g>
-        <circle cx="23.7" cy="2.9" r="2.8" fill="#C08E2E"/>
+        <circle cx="23.7" cy="2.9" r="2.8" fill="#E8B84B"/>
       </svg>
       <span class="nav__word"><b>AEVA</b> <em>CHEMICALS</em></span>
     </a>
@@ -65,11 +65,10 @@
 
   <main id="top">
 
-    <!-- ============ HERO (AeSop pour film; script.js plays it once the curtains open) ============ -->
-    <section class="hero">
-      <video class="hero__video" muted playsinline preload="auto" poster="assets/hero-flow-poster.jpg" data-end="assets/hero-flow-end.jpg" aria-hidden="true">
-        <source src="assets/hero-flow.mp4" type="video/mp4" />
-      </video>
+    <!-- ============ HERO (AeSop pour, scrubbed frame by frame on scroll by script.js) ============ -->
+    <section class="hero-scroll">
+    <div class="hero">
+      <canvas class="hero__film" data-frames="assets/hero-frames/" data-count="240" aria-hidden="true"></canvas>
       <div class="hero__shade"></div>
       <div class="grain"></div>
 
@@ -85,6 +84,7 @@
       </div>
 
       <a href="#about" class="hero__scroll" aria-label="Scroll down"><span></span></a>
+    </div>
     </section>
 
     <!-- ============ TAILORED FORMULATION ============ -->
@@ -214,6 +214,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=20261117b"></script>
+  <script src="script.js?v=20261117f"></script>
 </body>
 </html>

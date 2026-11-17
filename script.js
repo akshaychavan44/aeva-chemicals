@@ -134,9 +134,9 @@
 
     function draw(p) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // backdrop: emerald, lit from behind the flask
+      // backdrop: the page cream, a touch brighter behind the flask
       const bg = ctx.createRadialGradient(fx, fy + S * 0.55, S * 0.1, fx, fy + S * 0.55, Math.hypot(w, h) * 0.75);
-      bg.addColorStop(0, "#155a45"); bg.addColorStop(0.45, "#0b3d2f"); bg.addColorStop(1, "#05211a");
+      bg.addColorStop(0, "#fbfaf5"); bg.addColorStop(0.45, "#f4f1e8"); bg.addColorStop(1, "#ebe7da");
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
@@ -152,7 +152,7 @@
       g.addColorStop(0, mixc(C.dirtyTop, C.cleanDeep, clean, 0.25 + clean * 0.25)); g.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = g; ctx.fillRect(-S, -S, S * 2, S * 2);
       g = ctx.createRadialGradient(0, 0, 0, 0, 0, S * 0.45);
-      g.addColorStop(0, "rgba(0,0,0,.55)"); g.addColorStop(1, "rgba(0,0,0,0)");
+      g.addColorStop(0, "rgba(22,33,28,.4)"); g.addColorStop(1, "rgba(22,33,28,0)");
       ctx.fillStyle = g; ctx.fillRect(-S, -S, S * 2, S * 2);
       ctx.restore();
 
@@ -166,7 +166,7 @@
 
       // back of the glass
       outline(0);
-      ctx.fillStyle = "rgba(255,255,255,.035)";
+      ctx.fillStyle = "rgba(11,68,52,.045)";
       ctx.fill();
 
       // ---- the liquor ----
@@ -283,11 +283,11 @@
 
       // ---- the glass, in front ----
       outline(0);
-      ctx.strokeStyle = "rgba(235,248,240,.55)";
+      ctx.strokeStyle = "rgba(11,68,52,.55)";
       ctx.lineWidth = 2.2 * px;
       ctx.stroke();
       outline(0.012);
-      ctx.strokeStyle = "rgba(235,248,240,.14)";
+      ctx.strokeStyle = "rgba(11,68,52,.16)";
       ctx.lineWidth = 1.2 * px;
       ctx.stroke();
       // reflections: a sharp streak down the left of the cone, a soft one on the right, two on the neck
@@ -302,12 +302,12 @@
       ctx.strokeStyle = g; ctx.lineWidth = 2 * px;
       ctx.beginPath(); ctx.moveTo(-0.3, 0.992); ctx.lineTo(0.3, 0.992); ctx.stroke();
       // rim
-      ctx.strokeStyle = "rgba(240,250,244,.6)";
+      ctx.strokeStyle = "rgba(11,68,52,.55)";
       ctx.lineWidth = 2.4 * px;
       ctx.beginPath(); ctx.ellipse(0, 0.03, 0.128, 0.018, 0, 0, Math.PI * 2); ctx.stroke();
       // graduations
-      ctx.strokeStyle = "rgba(240,250,244,.45)";
-      ctx.fillStyle = "rgba(240,250,244,.55)";
+      ctx.strokeStyle = "rgba(11,68,52,.45)";
+      ctx.fillStyle = "rgba(11,68,52,.6)";
       ctx.lineWidth = 1.2 * px;
       ctx.font = `${10 * px}px "IBM Plex Mono", monospace`;
       ctx.textBaseline = "middle";
@@ -431,24 +431,82 @@
     walk(el);
   }
 
-  /* ---------- Hero: the AeSop pour ----------
-     Plays once as the preloader's curtains part, then rests on its last frame
-     (the filled flask). With reduced motion it shows that last frame as a still. */
+  /* ---------- Hero: the AeSop pour, frame by frame ----------
+     The hero pins inside .hero-scroll and the scroll through it picks the frame.
+     Frames load coarse to fine (every 16th, then 8th, ...) so scrubbing works
+     before they have all arrived; a missing frame shows its nearest loaded one.
+     With reduced motion only the last frame (the filled flask) is shown. */
   (() => {
-    const video = $(".hero__video");
-    if (!video) return;
-    if (reduced) {
-      video.poster = video.dataset.end;
-      video.removeAttribute("preload");
-      return;
-    }
-    const play = () => video.play().catch(() => { video.poster = video.dataset.end; });
-    setTimeout(play, 1700); // the curtains start opening at 2s
-    // Pause when scrolled away; resume if it had not finished.
-    new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) video.pause();
-      else if (!video.ended && video.currentTime > 0) play();
-    }).observe(video);
+    const wrap = $(".hero-scroll");
+    const canvas = $(".hero__film");
+    const ctx = canvas && canvas.getContext("2d");
+    if (!wrap || !ctx) return;
+    const N = +canvas.dataset.count;
+    const url = (i) => `${canvas.dataset.frames}${String(i + 1).padStart(3, "0")}.webp`;
+    const phone = matchMedia("(max-width: 860px)");
+    const imgs = new Array(N), ready = new Uint8Array(N);
+    let w = 0, h = 0, cur = reduced ? N - 1 : 0, target = cur, drawn = -1, raf = 0;
+
+    const nearest = (i) => {
+      for (let d = 0; d < N; d++) {
+        if (i - d >= 0 && ready[i - d]) return imgs[i - d];
+        if (i + d < N && ready[i + d]) return imgs[i + d];
+      }
+      return null;
+    };
+    const draw = () => {
+      const img = nearest(Math.round(cur));
+      if (!img) return;
+      const s = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+      const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+      // keep the pour (right of centre in the frame) in view, like object-position
+      ctx.drawImage(img, (w - dw) * (phone.matches ? 0.68 : 0.7), (h - dh) / 2, dw, dh);
+      drawn = Math.round(cur);
+    };
+    const resize = () => {
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      w = canvas.offsetWidth; h = canvas.offsetHeight; // layout size, ignoring the intro zoom
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.imageSmoothingQuality = "high";
+      draw();
+    };
+    const load = (i) => {
+      if (imgs[i]) return;
+      const img = (imgs[i] = new Image());
+      img.decoding = "async";
+      img.onload = () => {
+        ready[i] = 1;
+        // redraw if this frame is closer to the wanted one than what is showing
+        if (drawn < 0 || Math.abs(i - Math.round(cur)) < Math.abs(drawn - Math.round(cur)) || i === Math.round(cur)) draw();
+      };
+      img.src = url(i);
+    };
+
+    resize();
+    addEventListener("resize", resize);
+    phone.addEventListener("change", resize);
+    if (reduced) { load(N - 1); return; }
+
+    load(0); load(N - 1);
+    for (let step = 16; step >= 1; step /= 2) for (let i = 0; i < N; i += step) load(i);
+
+    const tick = () => {
+      cur += (target - cur) * 0.22; // a little easing so wheel steps glide
+      if (Math.abs(target - cur) < 0.02) cur = target;
+      if (Math.round(cur) !== drawn) draw();
+      raf = cur === target ? 0 : requestAnimationFrame(tick);
+    };
+    const onScroll = () => {
+      const run = wrap.offsetHeight - innerHeight;
+      const p = run > 0 ? Math.min(1, Math.max(0, -wrap.getBoundingClientRect().top / run)) : 0;
+      wrap.style.setProperty("--hero-p", p.toFixed(3));
+      target = p * (N - 1);
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
+    onScroll();
   })();
 
   /* ---------- Hero title ---------- */
@@ -509,7 +567,9 @@
 
   /* ---------- Nav ---------- */
   const nav = $("#nav");
-  const onScroll = () => nav.classList.toggle("is-scrolled", scrollY > 40);
+  // over the pinned hero the bar stays clear; it turns to glass once the hero has scrolled away
+  const heroWrap = $(".hero-scroll");
+  const onScroll = () => nav.classList.toggle("is-scrolled", scrollY > (heroWrap ? heroWrap.offsetTop + heroWrap.offsetHeight - 80 : 40));
   addEventListener("scroll", onScroll, { passive: true });
   onScroll();
   $(".nav__burger").addEventListener("click", (e) => {
@@ -837,10 +897,10 @@
     const canvas = $(".hwf-canvas", root);
     const ctx = canvas && canvas.getContext("2d");
     if (!ctx) return;
-    const css = getComputedStyle(document.documentElement);
+    const css = getComputedStyle(root); // the footer's own --hwf-bg / --hwf-ink
     const hex = (v) => { const h = v.trim().replace("#", ""); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); };
-    const bg = css.getPropertyValue("--cream").trim();
-    const inkHex = css.getPropertyValue("--ink").trim();
+    const bg = css.getPropertyValue("--hwf-bg").trim();
+    const inkHex = css.getPropertyValue("--hwf-ink").trim();
     const ink = hex(inkHex), warm = hex(css.getPropertyValue("--gold"));
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const WORD = "Aeva Chemicals", RADIUS = 80;

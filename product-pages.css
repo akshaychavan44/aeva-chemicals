@@ -1,15 +1,11 @@
 /* Product pages share the homepage's Jost / IBM Plex Mono typography. */
 .p-label { font: 400 11px/1.6 "IBM Plex Mono", monospace; letter-spacing: .13em; text-transform: uppercase; color: var(--leaf); }
 .product-page { background: var(--cream); color: var(--ink); }
-/* frosted cream glass, matching the home page header once scrolled */
-.product-page .nav:not(.is-open) {
-  background: rgba(244, 241, 232, .55);
-  -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%);
-  border-bottom: 1px solid rgba(255, 255, 255, .45);
-  box-shadow: 0 8px 32px -18px rgba(22, 33, 28, .35), inset 0 1px 0 rgba(255, 255, 255, .5);
-  --roll-color: var(--leaf);
+/* emerald header, as on the home page once scrolled */
+.product-page .nav {
+  background: rgba(11, 68, 52, .92);
+  -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
 }
-.product-page .nav:not(.is-open) .nav__brand, .product-page .nav:not(.is-open) .nav__links, .product-page .nav:not(.is-open) .nav__burger { color: var(--ink); }
 .product-page .nav__links [aria-current] { text-decoration: underline; text-underline-offset: 6px; }
 .product-page main { padding-top: 85px; }
 .product-page a:focus-visible, .product-overview a:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; }

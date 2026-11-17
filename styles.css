@@ -121,7 +121,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .aeva-curtain {
   position: absolute; left: 0; width: 100%; height: 50.5vh;
   display: flex; justify-content: center;
-  background: #080e0c;
+  background: var(--emerald);
   transition: transform 2s cubic-bezier(.77, 0, .175, 1);
 }
 .aeva-curtain--top { top: 0; align-items: flex-end; border-bottom: 1px solid rgba(232, 184, 75, .25); box-shadow: 0 10px 40px rgba(0, 0, 0, .7); }
@@ -165,19 +165,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   transition: background .4s, padding .4s, backdrop-filter .4s, color .4s, box-shadow .4s;
 }
 .nav.is-scrolled {
-  background: rgba(11, 68, 52, .94);
+  background: rgba(11, 68, 52, .92);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   padding-block: 12px;
-}
-/* home page: frosted cream glass once you scroll past the hero */
-body:not(.product-page) .nav.is-scrolled:not(.is-open) {
-  background: rgba(244, 241, 232, .82);
-  backdrop-filter: blur(30px) saturate(130%);
-  -webkit-backdrop-filter: blur(30px) saturate(130%);
-  border-bottom: 1px solid rgba(255, 255, 255, .45);
-  box-shadow: 0 8px 32px -18px rgba(22, 33, 28, .35), inset 0 1px 0 rgba(255, 255, 255, .5);
-  color: var(--ink); --roll-color: var(--leaf);
 }
 .nav__brand { display: flex; align-items: center; gap: 12px; }
 .logo-mark { width: 42px; height: 42px; color: currentColor; overflow: visible; }
@@ -192,7 +183,7 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
   position: absolute;
   left: 0; right: 0; bottom: -6px;
   height: 1px;
-  background: #fff;
+  background: currentColor;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform .3s var(--ease-out);
@@ -231,33 +222,27 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
 .nav__cta.btn--pill:hover { border-color: var(--cream); background: rgba(11, 68, 52, .4); }
-/* on the cream glass header the text and edge go dark so they stay readable */
-body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill,
-.product-page .nav:not(.is-open) .nav__cta.btn--pill {
-  border-color: rgba(22, 33, 28, .45); color: var(--ink); --roll-color: var(--leaf);
-  background: rgba(244, 241, 232, .45);
-}
-body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover,
-.product-page .nav:not(.is-open) .nav__cta.btn--pill:hover { border-color: var(--ink); background: rgba(244, 241, 232, .75); }
 
 /* =========================================================
    HERO
    ========================================================= */
+/* the hero pins while the pour plays out over the extra scroll */
+.hero-scroll { position: relative; height: 260svh; }
 .hero {
-  position: relative;
-  min-height: 100svh;
+  position: sticky; top: 0;
+  height: 100svh;
   display: flex; flex-direction: column; justify-content: center; align-items: center;
   text-align: center;
   padding: 120px var(--gutter) 80px;
   overflow: hidden;
   isolation: isolate;
   color: var(--cream);
-  /* the film's own emerald, shown until the first frame arrives */
-  background: radial-gradient(ellipse 90% 90% at 20% 15%, #11503f 0%, #06291d 55%, #01140b 100%);
+  background: var(--emerald); /* shown until the first frame arrives */
 }
-.hero__video {
+.hero__film {
   position: absolute; inset: 0; width: 100%; height: 100%; max-width: none;
-  z-index: -2; object-fit: cover; object-position: 70% 50%;
+  z-index: -2;
+  filter: brightness(1.3); /* lifts the film's deep green up to Aeva Emerald */
   transform: scale(1.08);
   animation: heroZoom 18s var(--ease-out) forwards;
 }
@@ -265,8 +250,8 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
 .hero__shade {
   position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(90deg, rgba(1, 20, 12, .55) 0%, rgba(1, 20, 12, .2) 45%, rgba(1, 20, 12, 0) 65%),
-    linear-gradient(180deg, rgba(1, 20, 12, .45) 0%, rgba(1, 20, 12, 0) 22%);
+    linear-gradient(90deg, rgba(11, 68, 52, .6) 0%, rgba(11, 68, 52, .25) 45%, rgba(11, 68, 52, 0) 65%),
+    linear-gradient(180deg, rgba(11, 68, 52, .5) 0%, rgba(11, 68, 52, 0) 22%);
 }
 .hero .grain { z-index: -1; opacity: .06; }
 .hero__inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
@@ -275,8 +260,8 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
   font-size: clamp(52px, 9.6vw, 150px);
   line-height: .95;
   letter-spacing: -.035em;
-  color: #fff;
-  text-shadow: 0 2px 22px rgba(11, 40, 30, .3);
+  color: var(--cream);
+  text-shadow: 0 2px 22px rgba(22, 33, 28, .3);
 }
 .hero__title .split { display: block; }
 .hero__rotator { display: inline-block; height: .98em; overflow: hidden; vertical-align: bottom; text-shadow: none; } /* a clipped glow would show as a box */
@@ -284,6 +269,7 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
 .hero__rot-track > span { display: block; height: .98em; line-height: .98em; white-space: nowrap; }
 .hero__ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 40px; }
 .hero__scroll {
+  opacity: calc(1 - var(--hero-p, 0) * 10);
   position: absolute; left: 50%; bottom: 32px; margin-left: -13px;
   width: 26px; height: 42px; border: 1.5px solid rgba(244, 241, 232, .6); border-radius: 14px;
 }
@@ -296,7 +282,7 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
   .hero__title { font-size: clamp(52px, 7.2vw, 124px); }
   .hero__ctas { justify-content: flex-start; }
   /* slide the film right, fading its left edge into the matching emerald, so the pour clears the headline */
-  .hero__video {
+  .hero__film {
     left: 22%; width: 78%;
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 28%);
     mask-image: linear-gradient(90deg, transparent 0%, #000 28%);
@@ -324,16 +310,15 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
 /* =========================================================
    ABOUT — the soaping bath in a flask (drawn by script.js)
    ========================================================= */
-.story { position: relative; height: 360svh; background: #0b3d2f; }
+.story { position: relative; height: 360svh; background: var(--cream); }
 .story__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
 .story__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .story__card {
   position: absolute; z-index: 1; left: clamp(20px, 5vw, 80px); top: 50%; transform: translateY(-44%);
   width: min(460px, calc(100% - 40px)); padding: clamp(24px, 2.6vw, 36px);
-  background: rgba(244, 241, 232, .9); color: var(--ink);
-  -webkit-backdrop-filter: blur(40px) saturate(120%); backdrop-filter: blur(40px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, .55); border-radius: 26px;
-  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, .7);
+  background: var(--tint); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 26px;
+  box-shadow: 0 30px 80px -50px rgba(22, 33, 28, .45);
 }
 .story__eyebrow { margin: 0 0 22px; padding-bottom: 18px; border-bottom: 1px solid var(--line); color: var(--leaf); }
 .story__steps { display: grid; margin: 0; padding: 0; list-style: none; }
@@ -418,14 +403,14 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
    ========================================================= */
 .capabilities {
   --roll-color: var(--gold);
-  background: #000000; color: #ffffff;
+  background: var(--emerald); color: var(--cream);
   padding: clamp(76px, 10vw, 130px) var(--gutter);
   text-align: center; position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: center;
   padding-top: clamp(40px, 5vw, 72px); /* sits close under Tailor-made */
 }
-.capabilities .eyebrow { margin-bottom: clamp(28px, 3vw, 48px); font-size: 13px; color: rgba(255, 255, 255, 0.7); }
-.capabilities .cap-list .roll--big { color: #ffffff; }
+.capabilities .eyebrow { margin-bottom: clamp(28px, 3vw, 48px); font-size: 13px; color: var(--cream-soft); }
+.capabilities .cap-list .roll--big { color: var(--cream); }
 .cap-list li { line-height: 1.06; }
 /* sized so the longest line spans almost the full width */
 .cap-list .roll--big { font-size: clamp(30px, 5vw, 112px); letter-spacing: -.02em; }
@@ -434,7 +419,7 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
   position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none;
   padding: 7px 12px; border-radius: 999px;
   font: 500 11px/1 "IBM Plex Mono", monospace; letter-spacing: .14em; text-transform: uppercase;
-  background: var(--leaf); color: var(--cream);
+  background: var(--gold); color: var(--ink);
   opacity: 0; transform: translate(-50%, -50%) scale(.6);
   transition: opacity .3s, transform .3s var(--ease-out);
 }
@@ -444,30 +429,29 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
    FOOTER — halftone wordmark (dots drawn by script.js)
    ========================================================= */
 .hwf-root {
-  --hwf-bg: var(--cream); --hwf-ink: var(--ink);
+  --hwf-bg: var(--emerald); --hwf-ink: var(--cream);
   position: relative; width: 100%; padding-bottom: calc(14vw + 90px); overflow: hidden; isolation: isolate;
-  border-top: 1px solid var(--line); /* hairline separating the footer from the page */
   background: var(--hwf-bg); color: var(--hwf-ink);
 }
 .hwf-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; max-width: none; }
 .footer__cols {
   position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px;
-  padding: clamp(90px, 10vw, 130px) 14px 0; --roll-color: var(--leaf);
+  padding: clamp(90px, 10vw, 130px) 14px 0; --roll-color: var(--gold);
 }
 .footer__h { text-transform: uppercase; font-size: 21px; font-weight: 500; margin-bottom: 24px; letter-spacing: .01em; }
-.footer__sub a { font-size: 21px; color: var(--ink-soft); line-height: 1.43; }
+.footer__sub a { font-size: 21px; color: var(--cream-soft); line-height: 1.43; }
 .footer__social { display: flex; gap: 18px; }
-.footer__social svg { width: 26px; height: 26px; fill: var(--ink-soft); transition: fill .3s, transform .3s var(--ease-out); }
-.footer__social a:hover svg { fill: var(--leaf); transform: translateY(-3px); }
+.footer__social svg { width: 26px; height: 26px; fill: var(--cream-soft); transition: fill .3s, transform .3s var(--ease-out); }
+.footer__social a:hover svg { fill: var(--gold); transform: translateY(-3px); }
 .footer__region {
   margin-top: 30px; display: flex; align-items: center; gap: 12px;
   width: min(290px, 100%); height: 54px; padding: 0 22px;
-  border: 2px solid var(--ink); border-radius: 999px; font-size: 19px;
+  border: 2px solid var(--cream-mute); border-radius: 999px; font-size: 19px;
   transition: background .3s, color .3s;
 }
 .footer__region svg { width: 26px; height: 26px; }
 .footer__region svg:last-child { margin-left: auto; width: 18px; height: 18px; }
-.footer__region:hover { background: var(--ink); color: var(--cream); }
+.footer__region:hover { background: var(--cream); color: var(--emerald); border-color: var(--cream); }
 .hwf-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 1100px) { .footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 56px; } }
 @media (max-width: 560px) {
@@ -496,8 +480,7 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
   .hero__scroll { display: none; }
   /* phones: the pour fills the frame, so the headline drops to the bottom over a shade */
   .hero { justify-content: flex-end; padding-bottom: 64px; }
-  .hero__video { object-position: 68% 50%; }
-  .hero__shade { background: linear-gradient(0deg, rgba(1, 20, 12, .85) 0%, rgba(1, 20, 12, .5) 38%, rgba(1, 20, 12, 0) 62%), linear-gradient(180deg, rgba(1, 20, 12, .45) 0%, rgba(1, 20, 12, 0) 18%); }
+  .hero__shade { background: linear-gradient(0deg, rgba(11, 68, 52, .92) 0%, rgba(11, 68, 52, .6) 38%, rgba(11, 68, 52, 0) 62%), linear-gradient(180deg, rgba(11, 68, 52, .5) 0%, rgba(11, 68, 52, 0) 18%); }
 }
 @media (max-width: 560px) {
   .tailor { grid-template-columns: 1fr; }
@@ -513,5 +496,7 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) .nav__cta.btn--pill:hover
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
   .char, .reveal-up, .reveal-words .word > span { opacity: 1 !important; transform: none !important; }
   .story__steps li { transition: none; }
+  .hero-scroll { height: auto; } /* no scrub: the hero shows the filled flask */
+  .hero { position: relative; }
   .aeva-curtain, .aeva-curtain-inner, .aeva-divider-line { transition-duration: .3s !important; }
 }

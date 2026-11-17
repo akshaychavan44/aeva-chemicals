@@ -6,7 +6,7 @@ Plain static site, no build step.
 
 | File | What it is |
 | --- | --- |
-| `index.html`, `styles.css`, `script.js` | Home page: preloader, hero (AeSop pour film, `assets/hero-flow.mp4`), Tailor-made (WebGL liquid), capabilities, products, About (scroll-driven flask), halftone footer |
+| `index.html`, `styles.css`, `script.js` | Home page: preloader, hero (AeSop pour scrubbed on scroll from `assets/hero-frames/`), Tailor-made (WebGL liquid), capabilities, products, About (scroll-driven flask), halftone footer |
 | `aesop.html`, `aekomala.html` | Product pages, styled by `product-pages.css` with `product-pages.js` for the menu |
 | `assets/` | Company film, formulation artwork, product brochures and SDS |
 
