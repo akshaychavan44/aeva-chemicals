@@ -159,9 +159,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 /* home page: frosted cream glass once you scroll past the hero */
 body:not(.product-page) .nav.is-scrolled:not(.is-open) {
-  background: rgba(244, 241, 232, .55);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  background: rgba(244, 241, 232, .82);
+  backdrop-filter: blur(30px) saturate(130%);
+  -webkit-backdrop-filter: blur(30px) saturate(130%);
   border-bottom: 1px solid rgba(255, 255, 255, .45);
   box-shadow: 0 8px 32px -18px rgba(22, 33, 28, .35), inset 0 1px 0 rgba(255, 255, 255, .5);
   color: var(--ink); --roll-color: var(--leaf);
@@ -225,11 +225,14 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
   overflow: hidden;
   isolation: isolate;
   color: var(--cream);
-  background: #c7a52e; /* matches the gold edges of the spiral clip */
+  /* the gold of the old spiral clip: bright low centre, deep amber corners */
+  background:
+    radial-gradient(ellipse 70% 75% at 50% 95%, #eff186 0%, #dfd13f 38%, rgba(217, 199, 63, 0) 75%),
+    radial-gradient(ellipse 120% 110% at 50% 60%, #d9c73f 0%, #c4ab25 55%, #ad8c19 100%);
 }
-.hero__video {
+.hero__bubbles {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; z-index: -2;
+  display: block; z-index: -2;
   transform: scale(1.08);
   animation: heroZoom 18s var(--ease-out) forwards;
 }
@@ -270,17 +273,6 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
 @keyframes charUp { to { transform: translateY(0); opacity: 1; } }
 
 /* =========================================================
-   MARQUEE
-   ========================================================= */
-.marquee { overflow: hidden; background: var(--mint); color: var(--ink); padding: 18px 0; }
-.marquee__track { display: flex; gap: 34px; width: max-content; align-items: center; animation: marquee 32s linear infinite; }
-.marquee__track span { font-size: clamp(22px, 2.6vw, 36px); font-weight: 500; letter-spacing: -.01em; white-space: nowrap; }
-.marquee__track i { font-style: normal; font-size: 18px; opacity: .6; }
-.marquee__track--rev { animation-direction: reverse; animation-duration: 40s; }
-.marquee:hover .marquee__track { animation-play-state: paused; }
-@keyframes marquee { to { transform: translateX(-50%); } }
-
-/* =========================================================
    SPLIT PANEL (screenshot 1)
    ========================================================= */
 .split-panel__text {
@@ -295,14 +287,14 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
 /* =========================================================
    ABOUT — the soaping bath, under the lens (weave drawn by script.js)
    ========================================================= */
-.story { position: relative; height: 360svh; background: var(--ink); }
+.story { position: relative; height: 360svh; background: #0b3d2f; }
 .story__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
 .story__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .story__card {
   position: absolute; z-index: 1; left: clamp(20px, 5vw, 80px); top: 50%; transform: translateY(-44%);
   width: min(460px, calc(100% - 40px)); padding: clamp(24px, 2.6vw, 36px);
-  background: rgba(244, 241, 232, .8); color: var(--ink);
-  -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
+  background: rgba(244, 241, 232, .9); color: var(--ink);
+  -webkit-backdrop-filter: blur(40px) saturate(120%); backdrop-filter: blur(40px) saturate(120%);
   border: 1px solid rgba(255, 255, 255, .55); border-radius: 26px;
   box-shadow: 0 30px 80px -40px rgba(0, 0, 0, .7);
 }
@@ -327,12 +319,6 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
 .story__film { white-space: nowrap; }
 .story__film:hover { background: var(--emerald); border-color: var(--emerald); color: var(--cream); }
 .story__film:focus-visible, .film__close:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-.story__scale {
-  position: absolute; z-index: 1; right: clamp(20px, 4vw, 56px); bottom: 32px;
-  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
-  color: rgba(244, 241, 232, .85); font: 500 11px/1 "IBM Plex Mono", monospace; letter-spacing: .14em; text-transform: uppercase;
-}
-.story__scale i { display: block; width: 90px; height: 6px; border: 1.5px solid currentColor; border-top: 0; }
 @media (max-width: 720px) {
   .story__card { top: auto; bottom: 16px; left: 16px; right: 16px; width: auto; transform: none; padding: 20px; border-radius: 20px; }
   .story__eyebrow { margin-bottom: 14px; padding-bottom: 12px; font-size: 10.5px; letter-spacing: .12em; }
@@ -341,7 +327,6 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
   .story__steps li > p:last-child { font-size: 15px; }
   .story__foot { margin-top: 18px; }
   .story__film { font-size: 14px; }
-  .story__scale { top: 92px; bottom: auto; }
 }
 /* the company film, opened from the story card */
 .film { width: min(1100px, 92vw); max-width: none; padding: 0; border: 0; background: transparent; overflow: visible; }
@@ -426,18 +411,6 @@ body:not(.product-page) .nav.is-scrolled:not(.is-open) {
 .section-head { margin-bottom: 64px; max-width: 1100px; }
 .section-head .eyebrow { margin-bottom: 18px; }
 .section-head p:not(.eyebrow) { margin-top: 24px; font-size: 19px; line-height: 1.5; max-width: 620px; color: var(--ink-soft); }
-/* =========================================================
-   REACH
-   ========================================================= */
-.reach { background: var(--cream); color: var(--ink); padding: clamp(90px, 12vw, 160px) var(--gutter); }
-.reach__rows { display: flex; flex-direction: column; gap: 48px; }
-.reach__row header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 18px; }
-.reach__row header b { font-size: 22px; font-weight: 600; color: var(--leaf); }
-.hover-list { display: flex; flex-wrap: wrap; gap: 4px 40px; }
-.marquee--hubs { background: transparent; padding: 6px 0; margin-inline: calc(var(--gutter) * -1); }
-.marquee--hubs .marquee__track span { font-size: clamp(32px, 4.6vw, 64px); }
-.marquee--hubs .marquee__track i { color: var(--pink); font-size: 14px; }
-
 /* =========================================================
    FOOTER — halftone wordmark (dots drawn by script.js)
    ========================================================= */

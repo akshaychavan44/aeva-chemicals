@@ -4,11 +4,11 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- About: the soaping bath, under the lens ----------
-     A pinned macro view of woven cotton. Scrolling runs the wash-off: loose dye
-     lifts off the threads, gold AeSop polymer chains (the logo's node-and-line
-     mark) gather it up and carry it out of frame, and the cloth comes up bright
-     with clean whites. */
+  /* ---------- About: the soaping bath, in a flask ----------
+     A pinned glass flask. Scrolling runs the wash-off: murky dyed liquor with
+     loose dye swirling in it, gold AeSop drops falling in, the liquor turning
+     over as gold strands catch the dye and carry it up and out, and finally a
+     clear, bright liquid with a few bubbles. Drawn in 2D, in flask units. */
   (() => {
     const section = $(".story");
     if (!section) return;
@@ -17,157 +17,59 @@
     const ctx = canvas.getContext("2d");
     const steps = $$(".story__steps li", section);
     const bars = $$(".story__progress i", section);
-    const scaleBar = $(".story__scale i", section);
     const ease = (t) => t * t * (3 - 2 * t);
     const ramp = (a, b, v) => (v <= a ? 0 : v >= b ? 1 : ease((v - a) / (b - a)));
     const lerp = (a, b, t) => a + (b - a) * t;
-    const OVER = 1.12;    // the weave is drawn oversize so the slow zoom-out never upscales it
-    const PITCH_MM = 0.4; // thread spacing the scale bar assumes
-    // Shades of the palette: leaf for dyed yarn, cream for white yarn, ink between the threads.
-    const YARN = { dyed: ["#04342a", "#0b6b4f", "#3f9f80"], white: ["#aaa596", "#f4f1e8", "#ffffff"] };
-    const DYE = ["#0a4d3b", "#0f6b52", "#163f4c"];
-    const INK = "#16211c", GOLD = "#e8b84b";
-
-    let w = 0, h = 0, dpr = 1, cell = 30, fw = 0, fh = 0;
-    let fabric = null, vignette = null, dots = [], loose = null, bead = null;
-    let specks = [], chains = [];
-    let target = 0, shown = 0, active = -1, visible = false, raf = 0, last = 0, rebuild = 0;
-
-    // Seeded random, so the dye lands in the same places after a resize.
-    let seed = 7;
-    const rand = () => {
-      seed = (seed + 0x6d2b79f5) | 0;
-      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-    const sprite = (size, paint) => {
-      const c = document.createElement("canvas");
-      c.width = c.height = size;
-      paint(c.getContext("2d"), size);
-      return c;
+    const hex = (s) => [1, 3, 5].map((i) => parseInt(s.slice(i, i + 2), 16));
+    const mixc = (a, b, t, al = 1) => `rgba(${a.map((v, i) => Math.round(lerp(v, b[i], t))).join(",")},${al})`;
+    const C = {
+      dirtyTop: hex("#3b4a36"), dirtyDeep: hex("#0b1712"), // murky, spent dye liquor
+      cleanTop: hex("#fbf3cf"), cleanDeep: hex("#e2c56a"),
+      gold: hex("#e8b84b"), ink: hex("#06201a"),
     };
 
-    // Soft dye specks and a lit gold bead, drawn once and stamped every frame.
-    dots = DYE.map((col) => sprite(48, (g, s) => {
-      const gr = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
-      gr.addColorStop(0, col); gr.addColorStop(0.55, col + "e0"); gr.addColorStop(1, col + "00");
-      g.fillStyle = gr; g.fillRect(0, 0, s, s);
+    let w = 0, h = 0, dpr = 1, S = 400, fx = 0, fy = 0;
+    let target = 0, shown = 0, prevShown = 0, active = -1, visible = false, raf = 0, last = 0, time = 0;
+    let slosh = 0, sloshV = 0, nextDrop = 0;
+    const drops = [], ripples = [], bubbles = [];
+    const dye = Array.from({ length: 70 }, () => ({
+      a: Math.random() * Math.PI * 2, r: 0.25 + Math.random() * 0.7, y: Math.random(),
+      s: 0.6 + Math.random() * 1.6, sp: 0.4 + Math.random() * 0.8, teal: Math.random() < 0.3,
     }));
-    // Dye once it lets go: lit up so it reads against the dark green yarn.
-    loose = sprite(48, (g, s) => {
-      const gr = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
-      gr.addColorStop(0, "#9fe0c4"); gr.addColorStop(0.3, "#2fae86"); gr.addColorStop(1, "rgba(47,174,134,0)");
-      g.fillStyle = gr; g.fillRect(0, 0, s, s);
-    });
-    bead = sprite(64, (g, s) => {
-      const gr = g.createRadialGradient(s * 0.38, s * 0.36, s * 0.04, s / 2, s / 2, s / 2);
-      gr.addColorStop(0, "#fff6d8"); gr.addColorStop(0.35, GOLD); gr.addColorStop(0.82, "#a9802a"); gr.addColorStop(1, "rgba(169,128,42,0)");
-      g.fillStyle = gr; g.fillRect(0, 0, s, s);
-    });
 
-    // A round yarn: dark edges, body colour, a highlight just off centre.
-    function yarn(g, x0, y0, x1, y1, dyed) {
-      const [edge, body, hi] = dyed ? YARN.dyed : YARN.white;
-      const gr = g.createLinearGradient(x0, y0, x1, y1);
-      gr.addColorStop(0, edge); gr.addColorStop(0.3, body); gr.addColorStop(0.44, hi);
-      gr.addColorStop(0.62, body); gr.addColorStop(1, edge);
-      return gr;
+    // The flask in its own units: height 1, centred on x = 0, rim at y = 0.
+    const CONE_TOP = 0.42, CONE_BOT = 0.885;
+    const halfWidth = (y, k = 0) => (y < CONE_TOP ? 0.11 : lerp(0.165, 0.4, (y - CONE_TOP) / (CONE_BOT - CONE_TOP))) - k;
+    function outline(k) {
+      ctx.beginPath();
+      ctx.moveTo(-(0.11 - k), 0.035);
+      ctx.lineTo(0.11 - k, 0.035);
+      ctx.lineTo(0.11 - k, 0.3);
+      ctx.quadraticCurveTo(0.11 - k, 0.37, 0.165 - k, CONE_TOP);
+      ctx.lineTo(0.4 - k, CONE_BOT);
+      ctx.quadraticCurveTo(0.45 - k, 1 - k, 0.35 - k, 1 - k);
+      ctx.lineTo(-(0.35 - k), 1 - k);
+      ctx.quadraticCurveTo(-(0.45 - k), 1 - k, -(0.4 - k), CONE_BOT);
+      ctx.lineTo(-(0.165 - k), CONE_TOP);
+      ctx.quadraticCurveTo(-(0.11 - k), 0.37, -(0.11 - k), 0.3);
+      ctx.closePath();
     }
-    // Yarn twist: fine diagonal strokes across the thread.
-    function twist(g, vertical, c, from, to, t, dyed) {
-      g.strokeStyle = dyed ? "rgba(0,0,0,.18)" : "rgba(70,62,40,.12)";
-      g.lineWidth = 1;
-      g.beginPath();
-      for (let s = from; s < to; s += t * 0.32) {
-        if (vertical) { g.moveTo(c - t / 2, s); g.lineTo(c + t / 2, s + t * 0.5); }
-        else { g.moveTo(s, c - t / 2); g.lineTo(s + t * 0.5, c + t / 2); }
-      }
-      g.stroke();
-    }
+    const streak = (x0, y0, x1, y1, width, alpha) => {
+      const g = ctx.createLinearGradient(x0, y0, x1, y1);
+      g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.3, `rgba(255,255,255,${alpha})`);
+      g.addColorStop(0.7, `rgba(255,255,255,${alpha})`); g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.strokeStyle = g; ctx.lineWidth = width;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    };
 
-    function weave() {
-      fw = Math.ceil(w * OVER);
-      fh = Math.ceil(h * OVER);
-      fabric = document.createElement("canvas");
-      fabric.width = Math.round(fw * dpr);
-      fabric.height = Math.round(fh * dpr);
-      const g = fabric.getContext("2d");
-      g.scale(dpr, dpr);
-      g.fillStyle = INK;
-      g.fillRect(0, 0, fw, fh);
-      g.translate(fw / 2, fh / 2);
-      g.rotate(-0.17); // the threads run slightly on the bias
-      const reach = Math.hypot(fw, fh) / 2 + cell;
-      const n = Math.ceil(reach / cell), t = cell * 0.8;
-      const dyed = (k) => ((k % 11) + 11) % 11 < 8; // 8 dyed threads, 3 white: a shirting check
-      // Warp first, the weft over it, then the warp floats back on top at alternate crossings (plain weave).
-      for (let i = -n; i <= n; i++) {
-        const x = i * cell;
-        g.fillStyle = yarn(g, x - t / 2, 0, x + t / 2, 0, dyed(i));
-        g.fillRect(x - t / 2, -reach, t, reach * 2);
+    const syncCard = (p) => {
+      const step = Math.min(3, Math.floor(p * 4));
+      if (step !== active) {
+        active = step;
+        steps.forEach((li, i) => li.classList.toggle("is-on", i === step));
       }
-      for (let j = -n; j <= n; j++) {
-        const y = j * cell;
-        g.fillStyle = yarn(g, 0, y - t / 2, 0, y + t / 2, dyed(j));
-        g.fillRect(-reach, y - t / 2, reach * 2, t);
-        twist(g, false, y, -reach, reach, t, dyed(j));
-      }
-      for (let i = -n; i <= n; i++) {
-        const x = i * cell, d = dyed(i);
-        const across = yarn(g, x - t / 2, 0, x + t / 2, 0, d);
-        for (let j = -n; j <= n; j++) {
-          if ((i + j) & 1) continue;
-          const y = j * cell;
-          g.save();
-          g.shadowColor = "rgba(0,0,0,.5)";
-          g.shadowBlur = cell * 0.3 * dpr;
-          g.fillStyle = across;
-          g.fillRect(x - t / 2, y - cell / 2, t, cell);
-          g.restore();
-          twist(g, true, x, y - cell / 2, y + cell / 2, t, d);
-          // Darken the ends where the thread dips back under.
-          const dip = g.createLinearGradient(0, y - cell / 2, 0, y + cell / 2);
-          dip.addColorStop(0, "rgba(0,0,0,.45)"); dip.addColorStop(0.24, "rgba(0,0,0,0)");
-          dip.addColorStop(0.76, "rgba(0,0,0,0)"); dip.addColorStop(1, "rgba(0,0,0,.45)");
-          g.fillStyle = dip;
-          g.fillRect(x - t / 2, y - cell / 2, t, cell);
-        }
-      }
-    }
-
-    function scatter() {
-      seed = 7;
-      const count = w < 720 ? 7 : 11;
-      chains = [];
-      for (let k = 0; k < count; k++) {
-        chains.push({
-          n: 7 + Math.floor(rand() * 5),
-          x: w * (0.1 + 0.8 * ((k * 0.618 + 0.3) % 1)),
-          y: h * (0.16 + 0.66 * (k / (count - 1))),
-          a: (rand() - 0.5) * 1.2,
-          phase: rand() * 6.28,
-          delay: rand() * 0.1,
-          pts: [],
-          alpha: 0,
-        });
-      }
-      specks = [];
-      const total = Math.round(Math.min(460, Math.max(160, (w * h) / 3600)));
-      for (let k = 0; k < total; k++) {
-        const c = chains[k % count];
-        specks.push({
-          fx: rand() * fw, fy: rand() * fh,
-          r: 1.8 + rand() * rand() * 4.6,
-          blot: rand() < 0.14, // a few soft smudges among the specks
-          t: 0.27 + rand() * 0.23, // when this speck lets go of the fibre
-          c, b: Math.floor(rand() * c.n),
-          ox: (rand() - 0.5) * cell * 0.7, oy: (rand() - 0.5) * cell * 0.7,
-          img: dots[Math.floor(rand() * dots.length)],
-          phase: rand() * 6.28,
-        });
-      }
-    }
+      bars.forEach((b, i) => b.style.setProperty("--fill", Math.min(1, Math.max(0, p * 4 - i)).toFixed(3)));
+    };
 
     function resize() {
       const r = pin.getBoundingClientRect();
@@ -176,12 +78,13 @@
       dpr = Math.min(devicePixelRatio || 1, 2);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
-      cell = Math.max(20, Math.min(38, w / 42));
-      weave();
-      scatter();
-      vignette = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.3, w / 2, h / 2, Math.hypot(w, h) * 0.6);
-      vignette.addColorStop(0, "rgba(22,33,28,0)");
-      vignette.addColorStop(1, "rgba(22,33,28,.6)");
+      if (w < 720) { // phones: the flask above the card
+        S = Math.min(h * 0.44, w * 0.95);
+        fx = w / 2; fy = h * 0.08 + 40;
+      } else {
+        S = Math.min(h * 0.68, w * 0.44);
+        fx = w * 0.66; fy = h * 0.54 - S * 0.5;
+      }
     }
 
     function measure() {
@@ -190,111 +93,230 @@
       target = run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
     }
 
-    function draw(now) {
-      if (!fabric) return;
-      const p = shown, time = reduced ? 0 : now / 1000;
-      const z = 1 - (1 - 1 / OVER) * ease(p); // a slow pull-back across the story
-      const ox = w / 2 - (fw * z) / 2, oy = h / 2 - (fh * z) / 2;
+    function update(dt, p) {
+      // scroll speed sloshes the liquor; a spring brings it back
+      const vel = (p - prevShown) / Math.max(dt, 1e-3);
+      prevShown = p;
+      sloshV += (-slosh * 40 - sloshV * 5 + vel * 6) * dt;
+      slosh += sloshV * dt;
+      // AeSop drops while step 2 is on screen
+      if (p > 0.24 && p < 0.56 && time > nextDrop) {
+        drops.push({ x: (Math.random() - 0.5) * 0.08, y: -0.35, v: 0 });
+        nextDrop = time + 0.75 + Math.random() * 0.5;
+      }
+      const L = level(p);
+      for (let i = drops.length - 1; i >= 0; i--) {
+        const d = drops[i];
+        d.v += 2.4 * dt; d.y += d.v * dt;
+        if (d.y >= L) {
+          drops.splice(i, 1);
+          ripples.push({ x: d.x, age: 0 });
+          sloshV += 0.6;
+          for (let k = 0; k < 6; k++) bubbles.push(bubble(L + 0.05 + Math.random() * 0.1, d.x));
+        }
+      }
+      for (let i = ripples.length - 1; i >= 0; i--) if ((ripples[i].age += dt) > 1.4) ripples.splice(i, 1);
+      // bubbles: a few always, many once the liquor is clean
+      const want = 6 + Math.round(ramp(0.72, 0.95, p) * 26);
+      if (bubbles.length < want && Math.random() < 0.3) bubbles.push(bubble(0.97, null));
+      for (let i = bubbles.length - 1; i >= 0; i--) {
+        const b = bubbles[i];
+        b.y -= b.v * dt; b.wob += dt * 5;
+        if (b.y < L + 0.01) bubbles.splice(i, 1);
+      }
+      for (const d of dye) d.a += d.sp * dt * (0.25 + ramp(0.3, 0.6, p) * 1.6);
+    }
+    const bubble = (y, x) => {
+      const hw = halfWidth(y, 0.03);
+      return { x: x ?? (Math.random() * 2 - 1) * hw * 0.8, y, r: 0.003 + Math.random() * 0.007, v: 0.06 + Math.random() * 0.1, wob: Math.random() * 6 };
+    };
+    const level = (p) => 0.6 - 0.05 * ramp(0.25, 0.55, p);
+
+    function draw(p) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.globalAlpha = 1;
-      ctx.globalCompositeOperation = "source-over";
-      ctx.drawImage(fabric, ox, oy, fw * z, fh * z);
-
-      // Before the wash: whites stained green-grey, the dye flat and muddy.
-      const dull = 1 - ramp(0.45, 0.8, p);
-      if (dull > 0.01) {
-        ctx.globalAlpha = dull;
-        ctx.globalCompositeOperation = "multiply";
-        ctx.fillStyle = "#c8d2c3";
-        ctx.fillRect(0, 0, w, h);
-        ctx.globalAlpha = dull * 0.5;
-        ctx.globalCompositeOperation = "saturation";
-        ctx.fillStyle = "#808080";
-        ctx.fillRect(0, 0, w, h);
-        ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = "source-over";
-      }
-
-      // AeSop polymer chains: rise in with the bath, then leave carrying the dye.
-      const wave = time * 1.6 + p * 7;
-      for (const c of chains) {
-        const enter = ramp(0.2 + c.delay, 0.44 + c.delay, p);
-        const leave = ramp(0.6 + c.delay * 0.6, 0.88, p);
-        const cx = c.x - (1 - enter) * 60 + leave * 90;
-        const cy = lerp(h + 160, c.y, enter) - leave * (c.y + 260);
-        const ang = c.a + Math.sin(time * 0.4 + c.phase) * 0.15 + leave * 0.5;
-        const dx = Math.cos(ang), dy = Math.sin(ang), sp = cell * 0.62;
-        c.alpha = enter * (1 - ramp(0.86, 0.92, p));
-        for (let j = 0; j < c.n; j++) {
-          const u = (j - (c.n - 1) / 2) * sp;
-          const off = Math.sin(j * 0.9 + wave + c.phase) * sp * 0.45;
-          c.pts[j] = [cx + dx * u - dy * off, cy + dy * u + dx * off];
-        }
-      }
-      ctx.lineWidth = Math.max(1.4, cell * 0.06);
-      ctx.strokeStyle = GOLD;
-      for (const c of chains) {
-        if (c.alpha < 0.01) continue;
-        ctx.globalAlpha = c.alpha * 0.85;
-        ctx.beginPath();
-        c.pts.forEach(([x, y], j) => (j ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
-        ctx.stroke();
-      }
-
-      // Loose dye: sits on the threads, lets go, and is caught by a chain.
-      for (const s of specks) {
-        const lift = ramp(s.t, s.t + 0.07, p);
-        const cap = ramp(s.t + 0.05, s.t + 0.2, p);
-        let x = ox + s.fx * z, y = oy + s.fy * z - lift * cell * 0.5;
-        if (lift > 0 && cap < 1) {
-          x += Math.sin(time * 3 + s.phase) * 1.5 * lift;
-          y += Math.cos(time * 2.6 + s.phase) * 1.5 * lift;
-        }
-        if (cap > 0) {
-          const [bx, by] = s.c.pts[s.b];
-          x = lerp(x, bx + s.ox, cap);
-          y = lerp(y, by + s.oy, cap);
-        }
-        const alpha = (s.blot ? 0.5 : 0.95) * lerp(1, s.c.alpha, cap);
-        if (alpha < 0.01 || y < -20 || y > h + 20) continue;
-        const d = s.r * (s.blot ? 2.4 : 1) * (1 + lift * 0.6) * 2.6;
-        ctx.globalAlpha = alpha * (1 - lift);
-        if (lift < 1) ctx.drawImage(s.img, x - d / 2, y - d / 2, d, d);
-        ctx.globalAlpha = alpha * lift;
-        if (lift > 0) ctx.drawImage(loose, x - d * 0.75, y - d * 0.75, d * 1.5, d * 1.5);
-      }
-      const rb = cell * 0.42;
-      for (const c of chains) {
-        if (c.alpha < 0.01) continue;
-        ctx.globalAlpha = c.alpha;
-        for (const [x, y] of c.pts) ctx.drawImage(bead, x - rb / 2, y - rb / 2, rb, rb);
-      }
-      ctx.globalAlpha = 1;
-
-      // Out of the bath: one slow sheen across the clean cloth.
-      const sweep = (p - 0.8) / 0.17;
-      if (sweep > 0 && sweep < 1) {
-        const x = lerp(-0.4 * w, 1.4 * w, sweep);
-        const gr = ctx.createLinearGradient(x - w * 0.22, 0, x + w * 0.22, h * 0.35);
-        gr.addColorStop(0, "rgba(255,255,255,0)");
-        gr.addColorStop(0.5, "rgba(255,250,235," + (0.24 * Math.sin(sweep * Math.PI)).toFixed(3) + ")");
-        gr.addColorStop(1, "rgba(255,255,255,0)");
-        ctx.globalCompositeOperation = "screen";
-        ctx.fillStyle = gr;
-        ctx.fillRect(0, 0, w, h);
-        ctx.globalCompositeOperation = "source-over";
-      }
-      ctx.fillStyle = vignette;
+      // backdrop: emerald, lit from behind the flask
+      const bg = ctx.createRadialGradient(fx, fy + S * 0.55, S * 0.1, fx, fy + S * 0.55, Math.hypot(w, h) * 0.75);
+      bg.addColorStop(0, "#155a45"); bg.addColorStop(0.45, "#0b3d2f"); bg.addColorStop(1, "#05211a");
+      ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
-      // The card and the scale bar follow the same progress.
-      const step = Math.min(3, Math.floor(p * 4));
-      if (step !== active) {
-        active = step;
-        steps.forEach((li, i) => li.classList.toggle("is-on", i === step));
+      const clean = ramp(0.55, 0.92, p), goldIn = ramp(0.26, 0.5, p);
+      const top = mixc(C.dirtyTop, C.cleanTop, clean), deep = mixc(C.dirtyDeep, C.cleanDeep, clean);
+
+      // the bench: shadow and the liquor's coloured light thrown on it
+      const floorY = fy + S;
+      ctx.save();
+      ctx.translate(fx, floorY);
+      ctx.scale(1, 0.16);
+      let g = ctx.createRadialGradient(0, 0, 0, 0, 0, S * 0.75);
+      g.addColorStop(0, mixc(C.dirtyTop, C.cleanDeep, clean, 0.25 + clean * 0.25)); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g; ctx.fillRect(-S, -S, S * 2, S * 2);
+      g = ctx.createRadialGradient(0, 0, 0, 0, 0, S * 0.45);
+      g.addColorStop(0, "rgba(0,0,0,.55)"); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g; ctx.fillRect(-S, -S, S * 2, S * 2);
+      ctx.restore();
+
+      // flask frame: units of S, gently swaying about its base
+      const sway = reduced ? 0 : Math.sin(time * 0.7) * 0.012 + slosh * 0.04;
+      ctx.translate(fx, floorY);
+      ctx.rotate(sway);
+      ctx.translate(0, -S);
+      ctx.scale(S, S);
+      const L = level(p), px = 1 / S;
+
+      // back of the glass
+      outline(0);
+      ctx.fillStyle = "rgba(255,255,255,.035)";
+      ctx.fill();
+
+      // ---- the liquor ----
+      ctx.save();
+      outline(0.012);
+      ctx.clip();
+      const tilt = -Math.tan(sway) - slosh * 0.5;
+      const surf = (x) => {
+        let y = L + x * tilt + Math.sin(x * 22 + time * 2.2) * 0.003;
+        for (const r of ripples) {
+          const d = Math.abs(x - r.x) - r.age * 0.35;
+          y += Math.exp(-d * d * 900) * 0.012 * (1 - r.age / 1.4);
+        }
+        return y;
+      };
+      ctx.beginPath();
+      ctx.moveTo(-0.5, surf(-0.5));
+      for (let x = -0.48; x <= 0.5; x += 0.02) ctx.lineTo(x, surf(x));
+      ctx.lineTo(0.5, 1.1); ctx.lineTo(-0.5, 1.1); ctx.closePath();
+      g = ctx.createLinearGradient(0, L, 0, 1);
+      g.addColorStop(0, top); g.addColorStop(1, deep);
+      ctx.fillStyle = g;
+      ctx.fill();
+      // volume: darker towards the walls, light through the middle
+      g = ctx.createLinearGradient(-0.45, 0, 0.45, 0);
+      g.addColorStop(0, "rgba(0,0,0,.35)"); g.addColorStop(0.35, "rgba(255,255,255,.06)");
+      g.addColorStop(0.55, "rgba(255,255,255,.1)"); g.addColorStop(1, "rgba(0,0,0,.4)");
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      // gold strands of AeSop turning in the liquor
+      const strands = goldIn * (1 - ramp(0.8, 0.92, p));
+      const lift = ramp(0.58, 0.85, p);
+      if (strands > 0.01) {
+        ctx.lineCap = "round";
+        for (let i = 0; i < 7; i++) {
+          const y = lerp(lerp(L + 0.06, 0.95, i / 6), L + 0.02, lift * (0.4 + i * 0.09));
+          const rx = halfWidth(y, 0.03) * (0.7 + 0.2 * Math.sin(i * 1.7)), ry = rx * 0.16;
+          const ph = time * (0.9 + i * 0.13) + i * 1.3;
+          ctx.strokeStyle = mixc(C.gold, [255, 236, 170], 0.3, strands * (0.75 - i * 0.05));
+          ctx.lineWidth = 2.2 * px;
+          ctx.beginPath();
+          ctx.ellipse(0, y, rx, ry, 0, ph, ph + 1.6 + 0.5 * Math.sin(time + i));
+          ctx.stroke();
+        }
       }
-      bars.forEach((b, i) => b.style.setProperty("--fill", Math.min(1, Math.max(0, p * 4 - i)).toFixed(3)));
-      if (scaleBar) scaleBar.style.width = ((cell / PITCH_MM) * z).toFixed(1) + "px";
+
+      // loose dye: swirls, is caught, rises and drains away
+      const hold = ramp(0.45, 0.62, p), gone = ramp(0.7, 0.86, p);
+      for (const d of dye) {
+        const y0 = lerp(L + 0.04, 0.96, d.y);
+        const y = lerp(y0, L + 0.015, lift * (0.5 + d.y * 0.5));
+        const hw = halfWidth(y, 0.03);
+        const r = lerp(d.r, 0.82, hold);
+        const x = Math.cos(d.a) * r * hw, yy = y + Math.sin(d.a) * r * hw * 0.16;
+        const front = 0.55 + 0.45 * Math.sin(d.a);
+        const a = (1 - gone) * front;
+        if (a < 0.02) continue;
+        const s = d.s * px * (0.8 + front * 0.6) * 2.2;
+        ctx.fillStyle = mixc(d.teal ? [47, 174, 134] : C.ink, C.ink, 0, a * 0.85);
+        ctx.beginPath(); ctx.arc(x, yy, s, 0, Math.PI * 2); ctx.fill();
+        if (hold > 0.05) { // held: a gold ring of polymer round each speck
+          ctx.strokeStyle = mixc(C.gold, C.gold, 0, a * hold * 0.9);
+          ctx.lineWidth = 1.1 * px;
+          ctx.beginPath(); ctx.arc(x, yy, s * 2, 0, Math.PI * 2); ctx.stroke();
+        }
+      }
+
+      // bubbles
+      for (const b of bubbles) {
+        const x = b.x + Math.sin(b.wob) * 0.004;
+        ctx.strokeStyle = `rgba(255,255,255,${0.35 + clean * 0.3})`;
+        ctx.lineWidth = 1 * px;
+        ctx.beginPath(); ctx.arc(x, b.y, b.r, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = "rgba(255,255,255,.6)";
+        ctx.beginPath(); ctx.arc(x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.28, 0, Math.PI * 2); ctx.fill();
+      }
+
+      // the surface, seen from just above: a lit ellipse with a bright meniscus
+      const rx = halfWidth(L, 0.012), ry = rx * 0.14;
+      ctx.save();
+      ctx.translate(0, surf(0));
+      ctx.rotate(Math.atan(tilt));
+      g = ctx.createLinearGradient(0, -ry, 0, ry);
+      g.addColorStop(0, mixc(C.dirtyTop, C.cleanTop, clean, 0.9)); g.addColorStop(1, top);
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,.12)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,.55)";
+      ctx.lineWidth = 1.4 * px;
+      ctx.beginPath(); ctx.ellipse(0, 0, rx, ry, 0, Math.PI, Math.PI * 2); ctx.stroke();
+      for (const r of ripples) {
+        const k = r.age / 1.4;
+        ctx.strokeStyle = mixc(C.gold, [255, 255, 255], 0.4, 0.7 * (1 - k));
+        ctx.beginPath(); ctx.ellipse(r.x, 0, 0.01 + k * rx * 0.7, (0.01 + k * rx * 0.7) * 0.16, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.restore();
+      ctx.restore(); // unclip
+
+      // AeSop drops on their way in
+      for (const d of drops) {
+        const r = 0.014;
+        g = ctx.createRadialGradient(d.x - r * 0.3, d.y - r * 0.2, r * 0.1, d.x, d.y, r * 1.2);
+        g.addColorStop(0, "#fff3c8"); g.addColorStop(0.5, "#e8b84b"); g.addColorStop(1, "#a97b1c");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y - r * 2.4);
+        ctx.bezierCurveTo(d.x + r * 0.4, d.y - r * 1.2, d.x + r, d.y - r * 0.5, d.x + r, d.y);
+        ctx.arc(d.x, d.y, r, 0, Math.PI);
+        ctx.bezierCurveTo(d.x - r, d.y - r * 0.5, d.x - r * 0.4, d.y - r * 1.2, d.x, d.y - r * 2.4);
+        ctx.fill();
+      }
+
+      // ---- the glass, in front ----
+      outline(0);
+      ctx.strokeStyle = "rgba(235,248,240,.55)";
+      ctx.lineWidth = 2.2 * px;
+      ctx.stroke();
+      outline(0.012);
+      ctx.strokeStyle = "rgba(235,248,240,.14)";
+      ctx.lineWidth = 1.2 * px;
+      ctx.stroke();
+      // reflections: a sharp streak down the left of the cone, a soft one on the right, two on the neck
+      streak(-0.15, 0.46, -0.355, 0.85, 5 * px, 0.55);
+      streak(-0.135, 0.5, -0.31, 0.83, 14 * px, 0.08);
+      streak(0.31, 0.62, 0.37, 0.84, 18 * px, 0.1);
+      streak(-0.075, 0.06, -0.075, 0.33, 4 * px, 0.45);
+      streak(0.08, 0.08, 0.08, 0.3, 9 * px, 0.08);
+      // the base catches the light
+      g = ctx.createLinearGradient(-0.35, 0, 0.35, 0);
+      g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.5, "rgba(255,255,255,.45)"); g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.strokeStyle = g; ctx.lineWidth = 2 * px;
+      ctx.beginPath(); ctx.moveTo(-0.3, 0.992); ctx.lineTo(0.3, 0.992); ctx.stroke();
+      // rim
+      ctx.strokeStyle = "rgba(240,250,244,.6)";
+      ctx.lineWidth = 2.4 * px;
+      ctx.beginPath(); ctx.ellipse(0, 0.03, 0.128, 0.018, 0, 0, Math.PI * 2); ctx.stroke();
+      // graduations
+      ctx.strokeStyle = "rgba(240,250,244,.45)";
+      ctx.fillStyle = "rgba(240,250,244,.55)";
+      ctx.lineWidth = 1.2 * px;
+      ctx.font = `${10 * px}px "IBM Plex Mono", monospace`;
+      ctx.textBaseline = "middle";
+      [[0.56, "300"], [0.68, "200"], [0.8, "100"]].forEach(([y, label]) => {
+        const xr = halfWidth(y) - 0.03;
+        ctx.beginPath(); ctx.moveTo(xr - 0.06, y); ctx.lineTo(xr, y); ctx.stroke();
+        ctx.fillText(label, xr - 0.06 - 26 * px, y);
+      });
+      ctx.fillText("ml", halfWidth(0.5) - 0.12, 0.5);
     }
 
     function tick(now) {
@@ -302,9 +324,12 @@
       if (!visible) return;
       const dt = Math.min(0.05, (now - (last || now)) / 1000);
       last = now;
-      shown = reduced ? target : shown + (target - shown) * (1 - Math.exp(-dt * 7));
+      time += dt;
+      shown = reduced ? target : shown + (target - shown) * (1 - Math.exp(-dt * 6));
       if (Math.abs(target - shown) < 0.0005) shown = target;
-      draw(now);
+      if (!reduced) update(dt, shown);
+      syncCard(shown);
+      draw(shown);
       if (!reduced || shown !== target) raf = requestAnimationFrame(tick);
     }
     const wake = () => {
@@ -317,17 +342,7 @@
       visible = entry.isIntersecting;
       if (visible) { measure(); wake(); }
     }).observe(section);
-    // Rebuilding the weave is heavy, so wait for the resize to settle.
-    new ResizeObserver(() => {
-      clearTimeout(rebuild);
-      rebuild = setTimeout(() => {
-        resize();
-        measure();
-        shown = target;
-        draw(performance.now());
-        wake();
-      }, fabric ? 150 : 0);
-    }).observe(pin);
+    new ResizeObserver(() => { resize(); measure(); syncCard(shown); draw(shown); wake(); }).observe(pin);
 
     // The company film plays in a pop-up from the story card.
     const film = $(".film");
@@ -415,6 +430,101 @@
     };
     walk(el);
   }
+
+  /* ---------- Hero: oil bubbles drifting on gold ----------
+     The bubbles from the old spiral clip, without the tube: clear oil bubbles
+     with dark refracted rims, flowing left to right along a slow wave. */
+  (() => {
+    const canvas = $(".hero__bubbles");
+    const ctx = canvas && canvas.getContext("2d");
+    if (!ctx) return;
+    const RIM = "59, 53, 1"; // the olive-black bubble edge in the clip
+    let w = 0, h = 0, dpr = 1, bubbles = [], raf = 0, last = 0, t = 0, onScreen = true;
+
+    const make = (spread) => {
+      const r = Math.random() < 0.55 ? 2 + Math.random() * 5 : 7 + Math.random() ** 1.6 * 30;
+      const depth = 0.45 + Math.random() * 0.55; // far bubbles are smaller, fainter, slower
+      return {
+        x: spread ? Math.random() * (w + 120) - 60 : -r * 3 - Math.random() * 80,
+        lane: (Math.random() + Math.random() + Math.random() - 1.5) * h * 0.34,
+        r: r * depth * Math.min(1.25, Math.max(0.7, w / 1400)),
+        depth,
+        speed: (18 + Math.random() * 34) * depth,
+        rise: 3 + Math.random() * 9,
+        phase: Math.random() * Math.PI * 2,
+        twin: r > 9 && Math.random() < 0.22, // the "8"-shaped pairs from the clip
+      };
+    };
+
+    const resize = () => {
+      w = canvas.offsetWidth; h = canvas.offsetHeight; // layout size, ignoring the intro zoom
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      const n = Math.round(Math.min(80, Math.max(30, (w * h) / 20000)));
+      bubbles = Array.from({ length: n }, () => make(true));
+    };
+
+    // the invisible stream the bubbles follow: a slow, wide wave across the middle
+    const pathY = (x) => h * 0.56 + Math.sin((x / w) * Math.PI * 2.2 + t * 0.12) * h * 0.1;
+
+    const drawBubble = (x, y, r, a, wob) => {
+      const rx = r * (1 + wob), ry = r * (1 - wob);
+      if (r < 4.5) {
+        ctx.fillStyle = `rgba(${RIM}, ${0.75 * a})`;
+        ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+        return;
+      }
+      const g = ctx.createRadialGradient(x - r * 0.25, y - r * 0.3, r * 0.1, x, y, r);
+      g.addColorStop(0, `rgba(255, 252, 200, ${0.35 * a})`);
+      g.addColorStop(0.75, `rgba(240, 235, 120, ${0.12 * a})`);
+      g.addColorStop(1, `rgba(${RIM}, ${0.25 * a})`);
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.lineWidth = Math.max(1.2, r * 0.16);
+      ctx.strokeStyle = `rgba(${RIM}, ${0.85 * a})`;
+      ctx.stroke();
+      ctx.lineWidth = Math.max(1, r * 0.08);
+      ctx.strokeStyle = `rgba(255, 255, 235, ${0.55 * a})`;
+      ctx.beginPath(); ctx.ellipse(x, y, rx * 0.68, ry * 0.68, 0, Math.PI * 1.08, Math.PI * 1.45); ctx.stroke();
+    };
+
+    const draw = () => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      for (const b of bubbles) {
+        const y = pathY(b.x) + b.lane + Math.sin(t * 0.8 + b.phase) * b.r * 0.6;
+        const fade = Math.min(1, (b.x + 60) / 160, (w + 60 - b.x) / 160);
+        const a = Math.max(0, fade) * (0.35 + b.depth * 0.65);
+        const wob = Math.sin(t * 1.6 + b.phase) * 0.06;
+        drawBubble(b.x, y, b.r, a, wob);
+        if (b.twin) drawBubble(b.x, y + b.r * 1.55, b.r * 0.72, a, -wob);
+      }
+    };
+
+    const frame = (now) => {
+      const dt = Math.min(0.05, (now - (last || now)) / 1000);
+      last = now; t += dt;
+      for (let i = 0; i < bubbles.length; i++) {
+        const b = bubbles[i];
+        b.x += b.speed * dt;
+        b.lane -= b.rise * dt;
+        if (b.x - b.r * 3 > w + 60 || b.lane < -h * 0.7) bubbles[i] = make(false);
+      }
+      draw();
+      raf = onScreen ? requestAnimationFrame(frame) : 0;
+    };
+
+    resize();
+    draw();
+    let rt = 0;
+    addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { resize(); draw(); }, 150); });
+    if (reduced) return;
+    new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      if (onScreen && !raf) { last = 0; raf = requestAnimationFrame(frame); }
+    }).observe(canvas);
+  })();
 
   /* ---------- Hero title ---------- */
   const counter = { n: 0 };

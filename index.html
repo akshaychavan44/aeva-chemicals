@@ -212,7 +212,6 @@
     <nav class="nav__links" aria-label="Primary">
       <a class="roll" href="#about">About</a>
       <a class="roll" href="#products">Products</a>
-      <a class="roll" href="#reach">Reach</a>
     </nav>
     <a href="https://wa.me/919820528708?text=Hi%20Aeva%2C%20I%27d%20like%20an%20AeSop%20trial%20sample." target="_blank" rel="noopener" class="btn btn--pill nav__cta"><span class="roll">Request a trial</span></a>
     <button class="nav__burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
@@ -220,11 +219,9 @@
 
   <main id="top">
 
-    <!-- ============ HERO (particle video) ============ -->
+    <!-- ============ HERO (oil bubbles on gold, drawn in script.js) ============ -->
     <section class="hero">
-      <video class="hero__video" autoplay muted loop playsinline preload="auto" poster="assets/hero-spiral-poster.jpg?v=hd1">
-        <source src="assets/hero-spiral-hd.mp4?v=hd1" type="video/mp4" />
-      </video>
+      <canvas class="hero__bubbles" aria-hidden="true"></canvas>
       <div class="hero__shade"></div>
       <div class="grain"></div>
 
@@ -288,7 +285,6 @@
     <section class="story" id="about" aria-labelledby="story-title">
       <div class="story__pin">
         <canvas class="story__canvas" aria-hidden="true"></canvas>
-        <div class="story__scale" aria-hidden="true"><i></i><span>1 mm</span></div>
         <div class="story__card">
           <h2 class="eyebrow story__eyebrow" id="story-title">About Aeva · Inside the soaping bath</h2>
           <ol class="story__steps">
@@ -327,35 +323,6 @@
         <source src="assets/aeva-company-overview.mp4" type="video/mp4">
       </video>
     </dialog>
-
-    <!-- ============ REACH ============ -->
-    <section class="reach" id="reach">
-      <div class="section-head">
-        <p class="eyebrow eyebrow--gold">Domestic &amp; export supply</p>
-        <h2 class="display display--dark reveal-words">From Mumbai to the world's dyehouses.</h2>
-      </div>
-      <div class="reach__rows">
-        <div class="reach__row">
-          <header><span class="eyebrow eyebrow--gold">Export</span><b>5 countries</b></header>
-          <ul class="hover-list">
-            <li><a class="roll roll--big roll--dark" href="#reach">Turkey</a></li>
-            <li><a class="roll roll--big roll--dark" href="#reach">Egypt</a></li>
-            <li><a class="roll roll--big roll--dark" href="#reach">Bangladesh</a></li>
-            <li><a class="roll roll--big roll--dark" href="#reach">Vietnam</a></li>
-            <li><a class="roll roll--big roll--dark" href="#reach">Sri Lanka</a></li>
-          </ul>
-        </div>
-        <div class="reach__row">
-          <header><span class="eyebrow eyebrow--gold">Across India</span><b>11 textile hubs</b></header>
-          <div class="marquee marquee--hubs" aria-label="Indian textile hubs">
-            <div class="marquee__track marquee__track--rev">
-              <span>Tirupur</span><i>●</i><span>Erode</span><i>●</i><span>Karur</span><i>●</i><span>Ludhiana</span><i>●</i><span>Panipat</span><i>●</i><span>Ahmedabad</span><i>●</i><span>Surat</span><i>●</i><span>Bhiwandi</span><i>●</i><span>Ichalkaranji</span><i>●</i><span>Jaipur</span><i>●</i><span>Pali</span><i>●</i>
-              <span>Tirupur</span><i>●</i><span>Erode</span><i>●</i><span>Karur</span><i>●</i><span>Ludhiana</span><i>●</i><span>Panipat</span><i>●</i><span>Ahmedabad</span><i>●</i><span>Surat</span><i>●</i><span>Bhiwandi</span><i>●</i><span>Ichalkaranji</span><i>●</i><span>Jaipur</span><i>●</i><span>Pali</span><i>●</i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- ============ FOOTER: halftone wordmark ============ -->
@@ -388,12 +355,12 @@
       <div class="footer__col">
         <p class="footer__h">Markets</p>
         <ul class="footer__sub">
-          <li><a class="roll" href="#reach">Reactive Dyehouses</a></li>
-          <li><a class="roll" href="#reach">Cotton Knits</a></li>
-          <li><a class="roll" href="#reach">Towels and Terry</a></li>
-          <li><a class="roll" href="#reach">Innerwear</a></li>
-          <li><a class="roll" href="#reach">Textile Printing</a></li>
-          <li><a class="roll" href="#reach">Export Houses</a></li>
+          <li><a class="roll" href="#products">Reactive Dyehouses</a></li>
+          <li><a class="roll" href="#products">Cotton Knits</a></li>
+          <li><a class="roll" href="#products">Towels and Terry</a></li>
+          <li><a class="roll" href="#products">Innerwear</a></li>
+          <li><a class="roll" href="#products">Textile Printing</a></li>
+          <li><a class="roll" href="#products">Export Houses</a></li>
         </ul>
       </div>
     </div>
