@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261117f" />
+  <link rel="stylesheet" href="styles.css?v=20261118d" />
   <link rel="stylesheet" href="product-pages.css?v=20261117f" />
 </head>
 <body>
@@ -56,10 +56,12 @@
       <span class="nav__word"><b>AEVA</b> <em>CHEMICALS</em></span>
     </a>
     <nav class="nav__links" aria-label="Primary">
-      <a class="roll" href="#about">About</a>
-      <a class="roll" href="#products">Products</a>
+      <a class="roll" href="about.html">About</a>
+      <a class="roll" href="products.html">What we do</a>
+      <a class="roll" href="careers.html">Careers</a>
+      <a class="roll" href="sustainability.html">Sustainability</a>
     </nav>
-    <a href="https://wa.me/919820528708?text=Hi%20Aeva%2C%20I%27d%20like%20an%20AeSop%20trial%20sample." target="_blank" rel="noopener" class="btn btn--pill nav__cta"><span class="roll">Request a trial</span></a>
+    <a href="#inquiry" class="btn btn--pill nav__cta"><span class="roll">Contact us</span></a>
     <button class="nav__burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
   </header>
 
@@ -113,14 +115,14 @@
 
     <!-- ============ HOVER LIST (screen-recording text effect) ============ -->
     <section class="capabilities" id="capabilities">
-      <p class="eyebrow eyebrow--dim">What we make for your mill</p>
+      <p class="eyebrow eyebrow--dim">Industries we serve</p>
       <ul class="cap-list" id="capList">
-        <li><a class="roll roll--big" href="aesop.html" data-note="AeSop · 01">Low-temperature soaping agents</a></li>
-        <li><a class="roll roll--big" href="aesop.html" data-note="AeSop · 02">Anti-backstaining systems</a></li>
-        <li><a class="roll roll--big" href="aekomala.html" data-note="AeKomala · 03">Cationic softeners</a></li>
-        <li><a class="roll roll--big" href="aesop.html" data-note="Process · 04">Wash-off efficiency programmes</a></li>
-        <li><a class="roll roll--big" href="aesop.html" data-note="Lab · 05">Batch QC &amp; certificates of analysis</a></li>
-        <li><a class="roll roll--big" href="#tailor" data-note="Custom · 06">Tailor-made formulations</a></li>
+        <li><a class="roll roll--big" href="products.html" data-note="Industry · 01">Construction</a></li>
+        <li><a class="roll roll--big" href="products.html" data-note="Industry · 02">Home &amp; Personal Care</a></li>
+        <li><a class="roll roll--big" href="products.html" data-note="Industry · 03">Paints</a></li>
+        <li><a class="roll roll--big" href="products.html" data-note="Industry · 04">Paper</a></li>
+        <li><a class="roll roll--big" href="products.html" data-note="Industry · 05">Textile</a></li>
+        <li><a class="roll roll--big" href="products.html" data-note="Industry · 06">Water Management</a></li>
       </ul>
       <div class="cap-cursor" id="capCursor" aria-hidden="true"></div>
     </section>
@@ -173,6 +175,32 @@
     </dialog>
   </main>
 
+  <!-- ============ INQUIRY ============ -->
+  <section class="inquiry" id="inquiry">
+    <div class="inquiry__head">
+      <p class="eyebrow">Inquiry</p>
+      <h2>Tell us about your mill.</h2>
+      <p>Send us your details and what you need. Our team replies within one working day.</p>
+    </div>
+    <form class="inquiry__form" id="inquiryForm">
+      <label><span>Name *</span><input name="name" required autocomplete="name"></label>
+      <label><span>Company</span><input name="company" autocomplete="organization"></label>
+      <label><span>Email *</span><input name="email" type="email" required autocomplete="email"></label>
+      <label><span>Phone</span><input name="phone" type="tel" autocomplete="tel"></label>
+      <label class="inquiry__full"><span>Industry</span><select name="industry"><option value="">Select</option><option>Construction</option><option>Home &amp; Personal Care</option><option>Paints</option><option>Paper</option><option>Textile</option><option>Water Management</option><option>Other</option></select></label>
+      <label class="inquiry__full"><span>Message *</span><textarea name="message" rows="4" required></textarea></label>
+      <button class="btn btn--light inquiry__full" type="submit"><span class="roll">Send inquiry</span></button>
+    </form>
+  </section>
+  <script>
+    document.getElementById('inquiryForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const f = new FormData(e.target), g = k => (f.get(k) || '').trim();
+      const body = `Name: ${g('name')}\nCompany: ${g('company')}\nEmail: ${g('email')}\nPhone: ${g('phone')}\nIndustry: ${g('industry')}\n\n${g('message')}`;
+      location.href = 'mailto:info@aevachemicals.com?subject=' + encodeURIComponent('Website inquiry from ' + g('name')) + '&body=' + encodeURIComponent(body);
+    });
+  </script>
+
   <!-- ============ FOOTER: halftone wordmark ============ -->
   <footer class="hwf-root" id="footer">
     <canvas class="hwf-canvas" aria-hidden="true"></canvas>
@@ -189,7 +217,7 @@
       </div>
 
       <div class="footer__col">
-        <p class="footer__h">Products</p>
+        <p class="footer__h">What we do</p>
         <ul class="footer__sub">
           <li><a class="roll" href="aesop.html">AeSop Soaping Agent</a></li>
           <li><a class="roll" href="aesop.html">Anti-Backstaining System</a></li>
@@ -201,14 +229,12 @@
       </div>
 
       <div class="footer__col">
-        <p class="footer__h">Markets</p>
+        <p class="footer__h">Contact</p>
         <ul class="footer__sub">
-          <li><a class="roll" href="#products">Reactive Dyehouses</a></li>
-          <li><a class="roll" href="#products">Cotton Knits</a></li>
-          <li><a class="roll" href="#products">Towels and Terry</a></li>
-          <li><a class="roll" href="#products">Innerwear</a></li>
-          <li><a class="roll" href="#products">Textile Printing</a></li>
-          <li><a class="roll" href="#products">Export Houses</a></li>
+          <li>Aeva Chemicals</li>
+          <li><a class="roll" href="tel:+919769999172">+91 97699 99172</a></li>
+          <li>13-A, Laxmi Industrial Estate, New Link Road,<br>Andheri West, Mumbai 400 053</li>
+          <li><a class="roll" href="mailto:info@aevachemicals.com">info@aevachemicals.com</a></li>
         </ul>
       </div>
     </div>
