@@ -57,23 +57,12 @@
   const fromHash = location.hash.slice(1);
   if (fromHash && tabs.some(t => t.dataset.industryTab === fromHash)) selectIndustry(fromHash);
 
-  /* ---------- Sustainability: wheel entrance and hover sync ---------- */
-  const wheel = document.querySelector('.su-wheel');
-  if (wheel) {
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(en => { if (en.isIntersecting) { wheel.classList.add('is-in'); io.disconnect(); } });
-      }, { threshold: 0.3 });
-      io.observe(wheel);
-    } else {
-      wheel.classList.add('is-in');
-    }
-    const light = (id, on) => $$(`[data-seg="${id}"]`).forEach(el => el.classList.toggle('is-on', on));
-    $$('[data-seg]').forEach(el => {
-      el.addEventListener('mouseenter', () => light(el.dataset.seg, true));
-      el.addEventListener('mouseleave', () => light(el.dataset.seg, false));
-      el.addEventListener('focusin', () => light(el.dataset.seg, true));
-      el.addEventListener('focusout', () => light(el.dataset.seg, false));
-    });
-  }
+  /* ---------- Sustainability: hover sync between the wheel and the list ---------- */
+  const light = (id, on) => $$(`[data-seg="${id}"]`).forEach(el => el.classList.toggle('is-on', on));
+  $$('[data-seg]').forEach(el => {
+    el.addEventListener('mouseenter', () => light(el.dataset.seg, true));
+    el.addEventListener('mouseleave', () => light(el.dataset.seg, false));
+    el.addEventListener('focusin', () => light(el.dataset.seg, true));
+    el.addEventListener('focusout', () => light(el.dataset.seg, false));
+  });
 })();
