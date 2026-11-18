@@ -512,6 +512,21 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .inquiry__full { grid-column: 1 / -1; }
 .inquiry__form .btn { justify-self: start; border: 0; cursor: pointer; }
 @media (max-width: 760px) { .inquiry, .inquiry__form { grid-template-columns: minmax(0,1fr); } }
+.inquiry { grid-template-areas: "head form" "map form"; grid-template-rows: auto 1fr; row-gap: 32px; }
+.inquiry__head { grid-area: head; }
+.inquiry__form { grid-area: form; align-self: start; }
+.inquiry .eyebrow { color: var(--leaf); }
+/* office map under the intro */
+.inquiry__map { grid-area: map; display: flex; flex-direction: column; min-height: 240px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: #fff; }
+.inquiry__map iframe { flex: 1; width: 100%; min-height: 180px; border: 0; display: block; background: #e8ebe4; }
+.inquiry__address { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 18px; padding: 12px 16px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.45; color: var(--ink-soft); }
+.inquiry__address b { color: var(--emerald); font-weight: 600; }
+.inquiry__address a { flex: none; color: var(--leaf); font-weight: 500; }
+.inquiry__address a:hover { text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 760px) {
+  .inquiry { grid-template-areas: "head" "form" "map"; grid-template-rows: auto; }
+  .inquiry__map { min-height: 380px; }
+}
 
 /* Careers page */
 .careers { background: var(--cream); color: var(--ink); padding: 140px var(--gutter) 96px; }
@@ -529,14 +544,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .careers__note a { color: var(--leaf); text-decoration: underline; }
 @media (max-width: 760px) { .careers { padding-top: 110px; } .careers__why { grid-template-columns: minmax(0,1fr); } .job { flex-direction: column; align-items: flex-start; } }
 
-/* Industries list: one name per line, alternating small and big */
-.cap-list li:nth-child(odd) .roll--big { font-size: clamp(22px, 2.7vw, 52px); letter-spacing: -.01em; }
-.cap-list li:nth-child(even) .roll--big { font-size: clamp(34px, 5.4vw, 112px); }
-.cap-list li + li { margin-top: clamp(4px, .7vw, 12px); }
-@media (max-width: 560px) {
-  .cap-list li:nth-child(odd) .roll--big { font-size: clamp(18px, 5vw, 22px); }
-  .cap-list li:nth-child(even) .roll--big { font-size: clamp(30px, 9vw, 40px); }
-}
 /* the Contact us button also shows inside the open phone menu */
 @media (max-width: 860px) {
   .nav.is-open .nav__burger { order: 1; }
