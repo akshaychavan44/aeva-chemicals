@@ -659,233 +659,138 @@
     finePointer.addEventListener("change", () => { pointerX = null; updateTargets(); });
   })();
 
-  /* ---------- Capabilities cursor label ---------- */
-  const cursor = $("#capCursor");
-  $$("#capList a").forEach((a) => {
-    a.addEventListener("mouseenter", () => { cursor.textContent = a.dataset.note; cursor.classList.add("is-on"); });
-    a.addEventListener("mouseleave", () => cursor.classList.remove("is-on"));
-  });
-  addEventListener("mousemove", (e) => {
-    cursor.style.left = e.clientX + "px";
-    cursor.style.top = e.clientY + "px";
-  }, { passive: true });
-
-  /* ---------- Liquid formulation study ----------
-     A small texture with GPU refraction, rather than a large autoplay video.
-     The original image remains visible if WebGL is unavailable. */
+  /* ---------- Industries reel ----------
+     The section is pinned while you scroll through it, and the six names move up
+     through the gold bar in step with the scroll, easing into each name. Each name
+     appears once: they sit in a loop round the bar, so a name leaving the top fades
+     out and comes back in at the bottom. Inside the tilted bar the names move along
+     the page's vertical, so the text stays centred in the bar. */
   (() => {
-    const scene = $("#liquidScene");
-    const section = scene.closest("section");
-    const copy = $(".split-panel__text", section);
-    const cards = $(".tailor", section);
-    const label = $(".liquid-scene__top", scene);
-    const caption = $(".liquid-scene__bottom", scene);
-    const canvas = $(".liquid-scene__canvas", scene);
-    const image = $(".liquid-scene__image", scene);
-    const toggle = $(".liquid-scene__toggle", scene);
+    const section = $("#capabilities");
+    if (!section) return;
+    const faded = $$(".cap-words:not(.cap-words--lit) li", section);
+    const lit = $$(".cap-words--lit li", section);
+    const bar = $(".cap-bar", section);
+    const n = faded.length;
+    section.style.setProperty("--cap-steps", n - 1);
+    section.classList.add("is-pinned");
+    const ease = t => t * t * (3 - 2 * t);
+    // a name's place relative to the bar, in rows, wrapped into the loop: -3 (top) to 3 (bottom)
+    const offset = (k, pos) => { let o = ((k - pos) % n + n) % n; if (o > n / 2) o -= n; return o; };
+    const fade = d => d <= 2 ? 1 - d * .17 : Math.max(0, .66 * (3 - d));
+    let row = 0, last = -1, queued = false;
+    function render() {
+      queued = false;
+      const r = section.getBoundingClientRect();
+      const span = r.height - innerHeight;
+      const p = span > 0 ? Math.min(Math.max(-r.top / span, 0), 1) * (n - 1) : 0;
+      const i = Math.min(Math.floor(p), n - 2);
+      const t = ease(p - i);
+      const pos = i + t;
+      if (Math.abs(pos - last) < .0005) return;
+      last = pos;
+      const deg = -2 + Math.sin(t * Math.PI) * 1.4;
+      const rad = deg * Math.PI / 180, sin = Math.sin(rad), cos = Math.cos(rad);
+      bar.style.transform = `rotate(${deg}deg)`;
+      for (let k = 0; k < n; k++) {
+        const o = offset(k, pos);
+        const dy = (o - k) * row; // from the name's own place in the list to its place in the loop
+        faded[k].style.transform = `translate3d(0, ${dy}px, 0)`;
+        faded[k].style.opacity = fade(Math.abs(o));
+        lit[k].style.transform = `translate3d(${o * row * sin}px, ${o * row * cos - k * row}px, 0)`;
+      }
+    }
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(render); } };
+    const measure = () => { row = faded[0].getBoundingClientRect().height; last = -1; queue(); };
+    addEventListener("scroll", queue, { passive: true });
+    addEventListener("resize", measure, { passive: true });
+    measure();
+    if (document.fonts) document.fonts.ready.then(measure);
+  })();
+
+  /* ---------- Built for the bath ----------
+     Pinned while you scroll through it. The headline fills in line by line over the
+     liquid, then fades away, and the three notes appear in turn. */
+  (() => {
+    const section = $("#tailor");
+    if (!section) return;
+    const title = $(".bath__title", section);
+    const lines = $$(".bath__title > span", section);
+    const art = $(".bath__art", section);
+    const notes = $$(".bath__note", section);
+    section.classList.add("is-pinned");
+    const clamp01 = v => Math.min(Math.max(v, 0), 1);
+    const range = (p, a, b) => clamp01((p - a) / (b - a));
+    const ease = t => t * t * (3 - 2 * t);
+    // each line gets a share of the fill in proportion to its length
+    const lens = lines.map(l => l.textContent.trim().length);
+    const total = lens.reduce((a, b) => a + b, 0);
+    let acc = 0;
+    const shares = lens.map(n => { const r = [acc / total, (acc + n) / total]; acc += n; return r; });
+    const noteAt = [[.58, .66], [.66, .74], [.74, .82]];
+    let queued = false;
+    // The liquid turns two ways: scrolling through the section winds it round about 240°,
+    // and while it is on screen it also keeps spinning slowly on its own.
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
-    const sideBySide = matchMedia("(min-width: 861px)");
-    const heading = $("#tailor-title", copy);
-    // Artwork box in CSS px, relative to the scene. `swirl` is where the liquid sits inside
-    // its square image (fractions), measured once the image loads.
-    const art = { x: 0, y: 0, size: 0, swirl: { top: 0, bottom: 1, left: 0, right: 1 } };
-
-    // Gap between the heading's box and the top of its capital letters (half the line's extra leading
-    // plus the space above the caps), so the swirl lines up with the ink rather than the box.
-    const headingInk = () => {
-      const cs = getComputedStyle(heading), size = parseFloat(cs.fontSize);
-      const line = parseFloat(cs.lineHeight) || size * 1.2;
-      return (line - size) / 2 + size * 0.2;
-    };
-    // Layout position on the page, ignoring the reveal transforms.
-    const pageTop = (el) => { let y = 0; for (let n = el; n; n = n.offsetParent) y += n.offsetTop; return y; };
-
-    // Sit the caption level with the bottom of the cards beside it, start the swirl level
-    // with the top of "Tailor-made", and keep it clear of the label and the caption.
-    function place() {
-      const side = sideBySide.matches;
-      if (side) {
-        const below = pageTop(section) + section.offsetHeight - pageTop(cards) - cards.offsetHeight;
-        scene.style.setProperty("--caption-bottom", Math.max(24, below) + "px");
-      } else {
-        scene.style.removeProperty("--caption-bottom");
-      }
-      const s = art.swirl;
-      const clear = label.offsetTop + label.offsetHeight + 16;
-      const from = side ? Math.max(clear, pageTop(heading) - pageTop(scene) + headingInk()) : clear;
-      // Side by side the swirl is allowed down alongside the caption so it can fill the panel.
-      const to = side ? caption.offsetTop + caption.offsetHeight * 0.3 : caption.offsetTop - 16;
-      const across = side ? 0.98 : 0.92;
-      art.size = Math.max(0, Math.min((scene.clientWidth * across) / (s.right - s.left), (to - from) / (s.bottom - s.top)));
-      art.x = scene.clientWidth / 2 - ((s.left + s.right) / 2) * art.size;
-      // Side by side the swirl's top meets the heading; stacked, it is centred between label and caption.
-      const spare = side ? 0 : (to - from - (s.bottom - s.top) * art.size) / 2;
-      art.y = from + spare - s.top * art.size;
-      scene.style.setProperty("--art-x", art.x + "px");
-      scene.style.setProperty("--art-y", art.y + "px");
-      scene.style.setProperty("--art-size", art.size + "px");
-      scene.classList.add("is-placed");
-    }
-    let resize = () => {};
-    const layout = () => { place(); resize(); };
-    const observer = new ResizeObserver(layout);
-    [scene, ...copy.children].forEach((el) => observer.observe(el));
-    sideBySide.addEventListener("change", layout);
-    place();
-
-    const options = { alpha: false, antialias: false, depth: false, powerPreference: "low-power" };
-    const gl = canvas.getContext("webgl2", options) || canvas.getContext("webgl", options);
-    if (!gl) return;
-
-    function shader(type, source) {
-      const value = gl.createShader(type);
-      gl.shaderSource(value, source);
-      gl.compileShader(value);
-      if (!gl.getShaderParameter(value, gl.COMPILE_STATUS)) {
-        gl.deleteShader(value);
-        return null;
-      }
-      return value;
-    }
-    const vertex = shader(gl.VERTEX_SHADER, `
-      attribute vec2 position;
-      varying vec2 uv;
-      void main() { uv = position * 0.5 + 0.5; gl_Position = vec4(position, 0.0, 1.0); }
-    `);
-    const fragment = shader(gl.FRAGMENT_SHADER, `
-      #ifdef GL_FRAGMENT_PRECISION_HIGH
-      precision highp float;
-      #else
-      precision mediump float;
-      #endif
-      varying vec2 uv;
-      uniform sampler2D artwork;
-      uniform float phase;
-      uniform vec4 box; // artwork position and size, in canvas UV
-      const vec3 cream = vec3(0.957, 0.945, 0.910);
-      void main() {
-        vec2 p = (uv - box.xy) / box.zw;
-        // Gentle local refraction makes the liquid bend and droplets drift.
-        p.x += 0.014 * sin(p.y * 9.0 + phase) + 0.006 * sin(p.y * 17.0 - phase * 2.0);
-        p.y += 0.012 * sin(p.x * 8.0 - phase) + 0.005 * cos(p.x * 14.0 + phase * 2.0);
-        // Lift the artwork's near-white (253-255) background to pure white so no box shows.
-        // Sampled outside any branch so mipmap selection stays smooth at the artwork's edge.
-        vec3 colour = min(texture2D(artwork, p).rgb * 1.008, 1.0);
-        float inside = step(0.0, p.x) * step(p.x, 1.0) * step(0.0, p.y) * step(p.y, 1.0);
-        colour = mix(vec3(1.0), colour, inside);
-        // Multiply onto the page cream here, so the opaque canvas fully covers the still image.
-        gl_FragColor = vec4(colour * cream, 1.0);
-      }
-    `);
-    if (!vertex || !fragment) return;
-    const program = gl.createProgram();
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
-    gl.useProgram(program);
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
-    const position = gl.getAttribLocation(program, "position");
-    gl.enableVertexAttribArray(position);
-    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-    const phase = gl.getUniformLocation(program, "phase");
-    const box = gl.getUniformLocation(program, "box");
-    gl.uniform1i(gl.getUniformLocation(program, "artwork"), 0);
-
-    let loaded = false, visible = false, paused = false, lost = false;
-    let frame = 0, elapsed = 0, previous = 0;
-    const canAnimate = () => loaded && visible && !paused && !motion.matches && !document.hidden && !lost;
-    function paint() {
-      if (!loaded || lost) return;
-      gl.uniform1f(phase, (elapsed % 20000) * Math.PI / 10000);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-    }
+    const SPIN = 18; // degrees per second
+    let turnScroll = 0, spin = 0, lastTick = 0, spinning = false, visible = false;
+    const applyTurn = () => art.style.setProperty("--r", (turnScroll + spin).toFixed(2) + "deg");
     function tick(now) {
-      frame = 0;
-      if (!canAnimate()) { previous = 0; return; }
-      // Cap at 30 fps and avoid jumps after leaving the viewport.
-      if (!previous || now - previous >= 32) {
-        elapsed += previous ? Math.min(now - previous, 64) : 0;
-        previous = now;
-        paint();
-      }
-      frame = requestAnimationFrame(tick);
+      if (!visible || motion.matches) { spinning = false; return; }
+      if (lastTick) spin = (spin + (now - lastTick) / 1000 * SPIN) % 360;
+      lastTick = now;
+      applyTurn();
+      requestAnimationFrame(tick);
     }
-    function sync() {
-      cancelAnimationFrame(frame);
-      frame = 0;
-      previous = 0;
-      toggle.hidden = !loaded || motion.matches || lost;
-      if (canAnimate()) frame = requestAnimationFrame(tick);
-      else paint();
-    }
-    resize = () => {
-      const bounds = scene.getBoundingClientRect();
-      // Full device resolution keeps the fine droplets crisp on retina screens.
-      const scale = Math.min(devicePixelRatio || 1, 2);
-      canvas.width = Math.max(1, Math.round(bounds.width * scale));
-      canvas.height = Math.max(1, Math.round(bounds.height * scale));
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform4f(box, art.x / bounds.width, 1 - (art.y + art.size) / bounds.height, art.size / bounds.width, art.size / bounds.height);
-      paint();
+    const startSpin = () => {
+      if (spinning || !visible || motion.matches) return;
+      spinning = true; lastTick = 0; requestAnimationFrame(tick);
     };
-    // Find the liquid inside its near-white square, so its visible top (not the image edge) lines up.
-    function measureSwirl() {
-      const n = 128, c = document.createElement("canvas");
-      c.width = c.height = n;
-      const g = c.getContext("2d", { willReadFrequently: true });
-      g.drawImage(image, 0, 0, n, n);
-      const px = g.getImageData(0, 0, n, n).data;
-      let t = n, b = -1, l = n, r = -1;
-      for (let y = 0; y < n; y++) {
-        for (let x = 0; x < n; x++) {
-          const i = (y * n + x) * 4;
-          if (Math.min(px[i], px[i + 1], px[i + 2]) > 232) continue;
-          t = Math.min(t, y); b = Math.max(b, y); l = Math.min(l, x); r = Math.max(r, x);
-        }
-      }
-      if (b > t && r > l) art.swirl = { top: t / n, bottom: (b + 1) / n, left: l / n, right: (r + 1) / n };
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; startSpin(); }).observe(art);
+    motion.addEventListener("change", startSpin);
+    function render() {
+      queued = false;
+      const r = section.getBoundingClientRect();
+      const span = r.height - innerHeight;
+      const p = span > 0 ? clamp01(-r.top / span) : 1;
+      const fill = range(p, .04, .44);
+      lines.forEach((l, i) => l.style.setProperty("--f", (range(fill, shares[i][0], shares[i][1]) * 100).toFixed(2) + "%"));
+      const out = ease(range(p, .48, .58));
+      title.style.opacity = 1 - out;
+      art.style.setProperty("--s", (.74 + .26 * ease(range(p, 0, .58))).toFixed(4));
+      turnScroll = -20 + 240 * p;
+      applyTurn();
+      notes.forEach((n, i) => {
+        const t = ease(range(p, noteAt[i][0], noteAt[i][1]));
+        n.style.opacity = t;
+        n.style.setProperty("--y", ((1 - t) * 18).toFixed(1) + "px");
+      });
     }
-    function load() {
-      if (loaded || !image.naturalWidth || lost) return;
-      // WebGL2 can mipmap this non-power-of-two texture, so it stays smooth when drawn small.
-      const mipmaps = typeof WebGL2RenderingContext !== "undefined" && gl instanceof WebGL2RenderingContext;
-      const texture = gl.createTexture();
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, mipmaps ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      try {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-      } catch { return; }
-      if (mipmaps) gl.generateMipmap(gl.TEXTURE_2D);
-      measureSwirl();
-      loaded = true;
-      place();
-      resize();
-      scene.classList.add("is-ready");
-      sync();
-    }
-    image.addEventListener("load", load, { once: true });
-    if (image.complete) load();
-    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(scene);
-    document.addEventListener("visibilitychange", sync);
-    motion.addEventListener("change", sync);
-    toggle.addEventListener("click", () => {
-      paused = !paused;
-      toggle.setAttribute("aria-pressed", String(paused));
-      toggle.setAttribute("aria-label", paused ? "Play liquid animation" : "Pause liquid animation");
-      sync();
-    });
-    canvas.addEventListener("webglcontextlost", () => {
-      lost = true;
-      scene.classList.remove("is-ready");
-      sync();
-    });
+    // keep the headline centred on the artwork (on phones the notes push the artwork up)
+    const centre = () => {
+      const a = art.getBoundingClientRect(), st = art.parentElement.getBoundingClientRect();
+      title.style.top = (a.top + a.height / 2 - st.top) + "px";
+    };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(render); } };
+    addEventListener("scroll", queue, { passive: true });
+    addEventListener("resize", () => { centre(); queue(); }, { passive: true });
+    render();
+    centre();
+  })();
+
+  /* ---------- Ticker ----------
+     A steady drift of about one letter every half second, whatever the screen size. */
+  (() => {
+    const track = $(".ticker__track");
+    if (!track) return;
+    const group = $(".ticker__group", track);
+    const setSpeed = () => {
+      const em = parseFloat(getComputedStyle(group).fontSize);
+      track.style.setProperty("--ticker-dur", (group.offsetWidth / (em * 1.1)).toFixed(1) + "s");
+    };
+    setSpeed();
+    addEventListener("resize", setSpeed, { passive: true });
+    if (document.fonts) document.fonts.ready.then(setSpeed);
   })();
 
   /* ---------- Footer: halftone wordmark ----------
