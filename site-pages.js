@@ -45,14 +45,16 @@
     history.replaceState(null, '', '#' + el.dataset.pickIndustry);
   }));
 
-  /* textile stage filter: All / Pre-treatment / Dyeing */
-  const groupTabs = $$('[data-group-tab]');
-  const groups = $$('[data-group]');
+  /* stage filter inside an industry (e.g. textile: All / Pre-treatment / Dyeing).
+     cms.js can rebuild these, so the tabs are looked up each time. */
   function selectGroup(id) {
-    groupTabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.groupTab === id)));
-    groups.forEach(g => { g.hidden = id !== 'all' && g.dataset.group !== id; });
+    $$('[data-group-tab]').forEach(t => t.setAttribute('aria-selected', String(t.dataset.groupTab === id)));
+    $$('[data-group]').forEach(g => { g.hidden = id !== 'all' && g.dataset.group !== id; });
   }
-  groupTabs.forEach(t => t.addEventListener('click', () => selectGroup(t.dataset.groupTab)));
+  document.addEventListener('click', e => {
+    const tab = e.target.closest('[data-group-tab]');
+    if (tab) selectGroup(tab.dataset.groupTab);
+  });
 
   /* textile spotlight: stage tabs */
   const stageTabs = $$('[data-stage-tab]');

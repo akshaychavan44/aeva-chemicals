@@ -1,0 +1,551 @@
+{
+  "whatwedo": {
+    "industries": [
+      {
+        "id": "textile",
+        "name": "Textile",
+        "count": 35,
+        "description": "Auxiliaries for every stage from yarn to finished fabric: spinning, pre-treatment, dyeing, printing and finishing.",
+        "groups": [
+          {
+            "number": "02",
+            "title": "Pre-treatment",
+            "description": "Used to prepare grey fabric for dyeing.",
+            "countLabel": "",
+            "products": [
+              {
+                "name": "Wetting agents",
+                "description": "Help water and chemicals soak into the fabric quickly and evenly."
+              },
+              {
+                "name": "Detergents & scouring agents",
+                "description": "Remove oils, waxes, dirt and natural impurities."
+              },
+              {
+                "name": "Desizing enzymes",
+                "description": "Amylase enzymes that break down the starch size applied during weaving."
+              },
+              {
+                "name": "Sequestering & chelating agents",
+                "description": "Lock up calcium, magnesium and iron in hard water so they don't cause spots or uneven bleaching."
+              },
+              {
+                "name": "Peroxide stabilisers",
+                "description": "Control how fast hydrogen peroxide works during bleaching, preventing fabric damage."
+              },
+              {
+                "name": "Peroxide killers",
+                "description": "Catalase enzymes that remove leftover peroxide before dyeing."
+              },
+              {
+                "name": "Bio-polishing enzymes",
+                "description": "Cellulase enzymes that remove surface fuzz for a cleaner, smoother look."
+              },
+              {
+                "name": "Mercerising wetting agents",
+                "description": "Work in strong caustic baths during mercerisation."
+              },
+              {
+                "name": "Demineralising agents",
+                "description": "Remove metal ions from cotton."
+              }
+            ]
+          },
+          {
+            "number": "03",
+            "title": "Dyeing",
+            "description": "Used to put colour on evenly, deep and fast.",
+            "countLabel": "",
+            "products": [
+              {
+                "name": "Levelling agents",
+                "description": "Help dye go on evenly, for uniform shades without patches."
+              },
+              {
+                "name": "Dispersing agents",
+                "description": "Keep dye finely spread in the bath so it doesn't clump or spot."
+              },
+              {
+                "name": "Anti-creasing agents & lubricants",
+                "description": "Let fabric glide through the machine without crease or rope marks."
+              },
+              {
+                "name": "Defoamers",
+                "description": "Knock down foam in the bath to prevent foam spots."
+              },
+              {
+                "name": "pH buffers & acid donors",
+                "description": "Hold or gradually shift bath pH so dye goes on at a controlled rate."
+              },
+              {
+                "name": "Carriers",
+                "description": "Help disperse dyes penetrate polyester at lower temperatures."
+              },
+              {
+                "name": "Reduction inhibitors & dye protectors",
+                "description": "Protect sensitive dyes from breaking down, so shades stay true."
+              },
+              {
+                "name": "Soaping agents",
+                "description": "Wash off unfixed dye after reactive dyeing for brighter shades and better wash fastness."
+              },
+              {
+                "name": "Dye-fixing agents",
+                "description": "Lock dye onto the fibre to cut bleeding and improve wet fastness."
+              },
+              {
+                "name": "Salt substitutes & exhaust aids",
+                "description": "Help reactive dyes exhaust onto cotton with less salt in the bath."
+              }
+            ]
+          }
+        ],
+        "more": {
+          "text": "Also in the textile range: auxiliaries for spinning & weaving, printing and finishing.",
+          "linkText": "Ask for the full list"
+        }
+      },
+      {
+        "id": "home-care",
+        "name": "Home & personal care",
+        "count": 13,
+        "description": "Ingredients that help detergents, cleaners, shampoos and lotions clean, foam, condition and feel right.",
+        "groups": [
+          {
+            "number": "",
+            "title": "Main product families",
+            "description": "Tailor-made grades on request.",
+            "countLabel": "4 shown",
+            "products": [
+              {
+                "name": "Surfactants",
+                "description": "The cleaning and foaming base of detergents, cleaners and shampoos."
+              },
+              {
+                "name": "Emulsifiers",
+                "description": "Keep oil and water blended, so creams and lotions stay smooth and stable."
+              },
+              {
+                "name": "Conditioning agents",
+                "description": "Leave hair, skin and fabric soft and easy to manage."
+              },
+              {
+                "name": "Thickeners",
+                "description": "Give liquids the right body and flow, from clear gels to rich lotions."
+              }
+            ]
+          }
+        ],
+        "more": {
+          "text": "These are our main families for home & personal care.",
+          "linkText": "Ask for the full list of 13 product types"
+        }
+      },
+      {
+        "id": "paints",
+        "name": "Paints & coatings",
+        "count": 10,
+        "description": "Additives that help paint disperse, flow, level and hold up on the wall.",
+        "groups": [
+          {
+            "number": "",
+            "title": "Main product families",
+            "description": "Tailor-made grades on request.",
+            "countLabel": "4 shown",
+            "products": [
+              {
+                "name": "Dispersing agents",
+                "description": "Spread pigment evenly through the paint for full, consistent colour."
+              },
+              {
+                "name": "Defoamers",
+                "description": "Stop foam and bubbles during manufacture and application."
+              },
+              {
+                "name": "Rheology modifiers",
+                "description": "Control how paint flows, levels and stays put without sagging."
+              },
+              {
+                "name": "Wetting agents",
+                "description": "Help paint wet pigments and surfaces for smooth, even coverage."
+              }
+            ]
+          }
+        ],
+        "more": {
+          "text": "These are our main families for paints & coatings.",
+          "linkText": "Ask for the full list of 10 product types"
+        }
+      },
+      {
+        "id": "water",
+        "name": "Water management",
+        "count": 11,
+        "description": "Treatment chemicals that keep water clean, equipment protected and effluent within limits.",
+        "groups": [
+          {
+            "number": "",
+            "title": "Main product families",
+            "description": "Tailor-made grades on request.",
+            "countLabel": "4 shown",
+            "products": [
+              {
+                "name": "Coagulants",
+                "description": "Destabilise suspended particles so they can be separated from water."
+              },
+              {
+                "name": "Flocculants",
+                "description": "Gather fine particles into larger flocs that settle or filter out quickly."
+              },
+              {
+                "name": "Antiscalants",
+                "description": "Stop scale building up in pipes, boilers, cooling towers and membranes."
+              },
+              {
+                "name": "Decolourants",
+                "description": "Remove colour from effluent, including dyehouse wastewater."
+              }
+            ]
+          }
+        ],
+        "more": {
+          "text": "These are our main families for water management.",
+          "linkText": "Ask for the full list of 11 product types"
+        }
+      },
+      {
+        "id": "paper",
+        "name": "Paper",
+        "count": 10,
+        "description": "Process and functional chemicals for stronger, smoother, brighter paper.",
+        "groups": [
+          {
+            "number": "",
+            "title": "Main product families",
+            "description": "Tailor-made grades on request.",
+            "countLabel": "4 shown",
+            "products": [
+              {
+                "name": "Sizing agents",
+                "description": "Control how much water and ink the paper absorbs."
+              },
+              {
+                "name": "Strength resins",
+                "description": "Add wet and dry strength to paper and board."
+              },
+              {
+                "name": "Retention aids",
+                "description": "Keep fines and fillers in the sheet for better yield and cleaner water."
+              },
+              {
+                "name": "Defoamers",
+                "description": "Control foam and entrained air in pulp and white water."
+              }
+            ]
+          }
+        ],
+        "more": {
+          "text": "These are our main families for paper.",
+          "linkText": "Ask for the full list of 10 product types"
+        }
+      },
+      {
+        "id": "construction",
+        "name": "Construction",
+        "count": 10,
+        "description": "Admixtures and additives that help concrete, mortar and waterproofing set right and last.",
+        "groups": [
+          {
+            "number": "",
+            "title": "Main product families",
+            "description": "Tailor-made grades on request.",
+            "countLabel": "4 shown",
+            "products": [
+              {
+                "name": "Superplasticisers",
+                "description": "Make concrete flow with less water, for higher strength."
+              },
+              {
+                "name": "Waterproofing compounds",
+                "description": "Keep water out of concrete, mortar and plaster."
+              },
+              {
+                "name": "Curing compounds",
+                "description": "Hold moisture in fresh concrete so it cures fully."
+              },
+              {
+                "name": "Bonding agents",
+                "description": "Help new concrete or plaster bond firmly to old surfaces."
+              }
+            ]
+          }
+        ],
+        "more": {
+          "text": "These are our main families for construction.",
+          "linkText": "Ask for the full list of 10 product types"
+        }
+      }
+    ]
+  },
+  "home_products": {
+    "cards": [
+      {
+        "name": "AeSop",
+        "label": "Low-temperature soaping agent",
+        "description": "Polymer wash-off chemistry for reactive-dyed cotton. AeSop removes loose dye and helps keep it from redepositing, so shades stay bright and white grounds stay clean.",
+        "link": "aesop.html",
+        "image": "assets/aesop-dropper.webp",
+        "imageAlt": "Clear liquid dropping from a glass pipette into rippling water"
+      },
+      {
+        "name": "AeKomala",
+        "label": "Cationic textile softener",
+        "description": "Fatty amidoamine softening chemistry for textile finishing. AeKomala delivers a silky, smooth handle while helping maintain whiteness, absorbency and reactive shades.",
+        "link": "aekomala.html",
+        "image": "assets/aekomala-gel.webp",
+        "imageAlt": "Clear, silky gel with small air bubbles, seen from above"
+      }
+    ]
+  },
+  "page_aesop": {
+    "label": "TEXTILE AUXILIARIES / 01",
+    "name": "AeSop",
+    "category": "Low-temperature soaping agent",
+    "headline": "Clean shades.\nClear advantage.",
+    "description": "Polymer wash-off chemistry for reactive-dyed cotton. AeSop removes loose dye and helps keep it from redepositing, so shades stay bright and white grounds stay clean.",
+    "suppliedAs": "Concentrated liquid",
+    "benefits": [
+      {
+        "title": "Cleaner white grounds",
+        "text": "Helps prevent hydrolysed reactive dye from staining adjacent white fabric."
+      },
+      {
+        "title": "Low-temperature wash-off",
+        "text": "Works from 60 °C, with a starting process at 70 °C subject to plant trial."
+      },
+      {
+        "title": "Low foam in circulation",
+        "text": "Surfactant-free chemistry designed for jet, soft-flow and winch machines."
+      }
+    ],
+    "profile": {
+      "title": "Know your\nchemistry.",
+      "text": "Practical information for your mill, from supplied form to application."
+    },
+    "technical": [
+      {
+        "term": "Supplied form",
+        "value": "Clear to pale amber liquid"
+      },
+      {
+        "term": "Ionic character",
+        "value": "Anionic"
+      },
+      {
+        "term": "Working temperature",
+        "value": "60–95 °C"
+      },
+      {
+        "term": "Compatibility",
+        "value": "Anionic and nonionic auxiliaries"
+      },
+      {
+        "term": "Packaging",
+        "value": "35 kg carboy · 120 kg drum · 1,000 kg IBC"
+      },
+      {
+        "term": "Shelf life",
+        "value": "12 months in sealed original packing"
+      }
+    ],
+    "application": {
+      "title": "A starting point\nfor your process.",
+      "steps": [
+        {
+          "title": "Rinse & neutralise",
+          "text": "Drop the dyebath, cold rinse, then neutralise with acetic acid at 50 °C."
+        },
+        {
+          "title": "Dose & soap",
+          "text": "Dose AeSop in a fresh bath. The brochure starting recipe is 70 °C for 20 minutes."
+        },
+        {
+          "title": "Rinse & finish",
+          "text": "Drain and warm rinse at 50 °C before proceeding to softening."
+        }
+      ],
+      "dosageTitle": "Starting conditions",
+      "dosage": [
+        {
+          "label": "Pale, below 1% o.w.f.",
+          "value": "0.5–0.8 g/L"
+        },
+        {
+          "label": "Medium, 1–3%",
+          "value": "0.8–1.0 g/L"
+        },
+        {
+          "label": "Dark, 3–6%",
+          "value": "1.0–1.3 g/L"
+        },
+        {
+          "label": "Extra dark, above 6%",
+          "value": "1.3–1.5 g/L"
+        }
+      ],
+      "note": "Shade depth, dye class, liquor ratio, water quality and machine type affect the recipe. Confirm dosage and performance in your own plant trial."
+    },
+    "documents": {
+      "title": "Details, ready to hand.",
+      "links": [
+        {
+          "label": "Product brochure",
+          "url": "assets/documents/aesop-brochure.pdf"
+        },
+        {
+          "label": "Request safety data sheet",
+          "url": "mailto:info@aevachemicals.com?subject=AeSop%20Safety%20Data%20Sheet"
+        },
+        {
+          "label": "Ask a technical question",
+          "url": "mailto:info@aevachemicals.com?subject=AeSop%20technical%20enquiry"
+        }
+      ]
+    }
+  },
+  "page_aekomala": {
+    "label": "TEXTILE AUXILIARIES / 02",
+    "name": "AeKomala",
+    "category": "Cationic textile softener",
+    "headline": "A softer touch.\nA considered finish.",
+    "description": "Fatty amidoamine softening chemistry for textile finishing. AeKomala delivers a silky, smooth handle while helping maintain whiteness, absorbency and reactive shades.",
+    "suppliedAs": "Pale-yellow paste",
+    "benefits": [
+      {
+        "title": "Silky, smooth handle",
+        "text": "A soft, full finish with excellent surface smoothness."
+      },
+      {
+        "title": "Whiteness & shade care",
+        "text": "Minimal yellowing and minimal shade change on dyed fabric."
+      },
+      {
+        "title": "Absorbency retained",
+        "text": "A hydrophilic finish suited to towels, terry and innerwear."
+      }
+    ],
+    "profile": {
+      "title": "Know your\nchemistry.",
+      "text": "Practical information for your mill, from supplied form to application."
+    },
+    "technical": [
+      {
+        "term": "Supplied form",
+        "value": "Pale-yellow paste"
+      },
+      {
+        "term": "Ionic character",
+        "value": "Cationic"
+      },
+      {
+        "term": "pH",
+        "value": "4–6"
+      },
+      {
+        "term": "Dispersion",
+        "value": "Dispersible in water; no heating needed"
+      },
+      {
+        "term": "Packaging",
+        "value": "50 kg and 200 kg plastic drums"
+      },
+      {
+        "term": "Shelf life",
+        "value": "12 months in closed original containers"
+      }
+    ],
+    "application": {
+      "title": "A starting point\nfor your process.",
+      "steps": [
+        {
+          "title": "Prepare the stock",
+          "text": "Disperse the paste under continuous stirring to a 5–10% stock. No heating is needed. Filter before storage."
+        },
+        {
+          "title": "Apply the softener",
+          "text": "Exhaust at pH 5–5.5 and 30–40 °C for 20 minutes, or use padding at about 20 °C."
+        },
+        {
+          "title": "Dry & evaluate",
+          "text": "Dry at 110–130 °C. Check handle, shade and absorbency on your own fabric."
+        }
+      ],
+      "dosageTitle": "Starting conditions",
+      "dosage": [
+        {
+          "label": "Exhaust, on fabric weight",
+          "value": "0.5–4.0% o.w.f."
+        },
+        {
+          "label": "Padding bath",
+          "value": "5–40 g/L"
+        },
+        {
+          "label": "Exhaust liquor ratio",
+          "value": "5:1–20:1"
+        },
+        {
+          "label": "Padding pick-up",
+          "value": "60–90%"
+        }
+      ],
+      "note": "Dosages below are for a 10% stock dilution. Rinse well after soaping. Anionic auxiliaries may cause precipitation and loss of performance; confirm compatibility by trial."
+    },
+    "documents": {
+      "title": "Details, ready to hand.",
+      "links": [
+        {
+          "label": "Product brochure",
+          "url": "assets/documents/aekomala-brochure.pdf"
+        },
+        {
+          "label": "Safety data sheet",
+          "url": "assets/documents/aekomala-sds.pdf"
+        },
+        {
+          "label": "Ask a technical question",
+          "url": "mailto:info@aevachemicals.com?subject=AeKomala%20technical%20enquiry"
+        }
+      ]
+    }
+  },
+  "careers": {
+    "intro": {
+      "title": "Build better chemistry with us.",
+      "text": "We are a Mumbai team making specialty chemicals for textiles, home and personal care, paints, paper, water management and construction. We look for curious people who like solving real problems for real plants."
+    },
+    "email": "info@aevachemicals.com",
+    "roles": [
+      {
+        "title": "Application Chemist",
+        "meta": "Lab · Mumbai",
+        "description": "Run trials for mills, tune formulations and support customers on site."
+      },
+      {
+        "title": "Technical Sales Executive",
+        "meta": "Sales · India",
+        "description": "Visit customers, understand their process and match them with the right chemistry."
+      },
+      {
+        "title": "Production Supervisor",
+        "meta": "Plant · Mumbai",
+        "description": "Lead batches, safety and quality checks on the production floor."
+      },
+      {
+        "title": "Quality Control Analyst",
+        "meta": "Lab · Mumbai",
+        "description": "Test raw materials and finished batches and issue certificates of analysis."
+      }
+    ]
+  }
+}

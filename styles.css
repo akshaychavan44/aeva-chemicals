@@ -588,3 +588,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .nav.is-open .nav__links { order: 2; }
   .nav.is-open .nav__cta { order: 3; display: inline-flex; margin: 4px 0 18px; }
 }
+
+/* Editable sections wait for the saved content (cms-config.js, cms.js) */
+html.cms-wait [data-cms] { visibility: hidden; }
+.careers__empty { color: var(--ink-soft); padding: 18px 0; }
