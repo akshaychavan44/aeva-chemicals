@@ -8,101 +8,33 @@
         "description": "Auxiliaries for every stage from yarn to finished fabric: spinning, pre-treatment, dyeing, printing and finishing.",
         "groups": [
           {
-            "number": "02",
-            "title": "Pre-treatment",
-            "description": "Used to prepare grey fabric for dyeing.",
-            "countLabel": "",
+            "number": "",
+            "title": "Main product families",
+            "description": "Tailor-made grades on request.",
+            "countLabel": "4 shown",
             "products": [
-              {
-                "name": "Wetting agents",
-                "description": "Help water and chemicals soak into the fabric quickly and evenly."
-              },
               {
                 "name": "Detergents & scouring agents",
-                "description": "Remove oils, waxes, dirt and natural impurities."
+                "description": "Remove oils, waxes, dirt and natural impurities before dyeing."
               },
-              {
-                "name": "Desizing enzymes",
-                "description": "Amylase enzymes that break down the starch size applied during weaving."
-              },
-              {
-                "name": "Sequestering & chelating agents",
-                "description": "Lock up calcium, magnesium and iron in hard water so they don't cause spots or uneven bleaching."
-              },
-              {
-                "name": "Peroxide stabilisers",
-                "description": "Control how fast hydrogen peroxide works during bleaching, preventing fabric damage."
-              },
-              {
-                "name": "Peroxide killers",
-                "description": "Catalase enzymes that remove leftover peroxide before dyeing."
-              },
-              {
-                "name": "Bio-polishing enzymes",
-                "description": "Cellulase enzymes that remove surface fuzz for a cleaner, smoother look."
-              },
-              {
-                "name": "Mercerising wetting agents",
-                "description": "Work in strong caustic baths during mercerisation."
-              },
-              {
-                "name": "Demineralising agents",
-                "description": "Remove metal ions from cotton."
-              }
-            ]
-          },
-          {
-            "number": "03",
-            "title": "Dyeing",
-            "description": "Used to put colour on evenly, deep and fast.",
-            "countLabel": "",
-            "products": [
               {
                 "name": "Levelling agents",
                 "description": "Help dye go on evenly, for uniform shades without patches."
-              },
-              {
-                "name": "Dispersing agents",
-                "description": "Keep dye finely spread in the bath so it doesn't clump or spot."
-              },
-              {
-                "name": "Anti-creasing agents & lubricants",
-                "description": "Let fabric glide through the machine without crease or rope marks."
-              },
-              {
-                "name": "Defoamers",
-                "description": "Knock down foam in the bath to prevent foam spots."
-              },
-              {
-                "name": "pH buffers & acid donors",
-                "description": "Hold or gradually shift bath pH so dye goes on at a controlled rate."
-              },
-              {
-                "name": "Carriers",
-                "description": "Help disperse dyes penetrate polyester at lower temperatures."
-              },
-              {
-                "name": "Reduction inhibitors & dye protectors",
-                "description": "Protect sensitive dyes from breaking down, so shades stay true."
               },
               {
                 "name": "Soaping agents",
                 "description": "Wash off unfixed dye after reactive dyeing for brighter shades and better wash fastness."
               },
               {
-                "name": "Dye-fixing agents",
-                "description": "Lock dye onto the fibre to cut bleeding and improve wet fastness."
-              },
-              {
-                "name": "Salt substitutes & exhaust aids",
-                "description": "Help reactive dyes exhaust onto cotton with less salt in the bath."
+                "name": "Softeners",
+                "description": "Give fabric a soft, smooth handle while keeping its whiteness and absorbency."
               }
             ]
           }
         ],
         "more": {
-          "text": "Also in the textile range: auxiliaries for spinning & weaving, printing and finishing.",
-          "linkText": "Ask for the full list"
+          "text": "These are our main families for textiles.",
+          "linkText": "Ask for the full list of 35 product types"
         }
       },
       {
