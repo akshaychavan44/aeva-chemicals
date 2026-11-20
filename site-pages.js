@@ -79,7 +79,10 @@
   });
 
   const fromHash = location.hash.slice(1);
-  if (fromHash && tabs.some(t => t.dataset.industryTab === fromHash)) selectIndustry(fromHash);
+  if (fromHash && tabs.some(t => t.dataset.industryTab === fromHash)) {
+    selectIndustry(fromHash);
+    if (range) requestAnimationFrame(() => range.scrollIntoView({ block: 'start' }));
+  }
 
   /* ---------- Sustainability: hover sync between the wheel and the list ---------- */
   const light = (id, on) => $$(`[data-seg="${id}"]`).forEach(el => el.classList.toggle('is-on', on));

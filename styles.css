@@ -494,6 +494,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .footer__region svg { width: 26px; height: 26px; }
 .footer__region svg:last-child { margin-left: auto; width: 18px; height: 18px; }
 .footer__region:hover { background: var(--cream); color: var(--emerald); border-color: var(--cream); }
+a.footer__region { text-decoration: none; color: inherit; }
 .hwf-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 1100px) { .footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 56px; } }
 @media (max-width: 560px) {
@@ -592,3 +593,5 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* Editable sections wait for the saved content (cms-config.js, cms.js) */
 html.cms-wait [data-cms] { visibility: hidden; }
 .careers__empty { color: var(--ink-soft); padding: 18px 0; }
+.inquiry__sent { padding: 12px 16px; border-radius: 12px; background: #e6f0ea; color: var(--emerald); font-size: 15px; line-height: 1.5; }
+.inquiry__sent a { color: var(--leaf); text-decoration: underline; }

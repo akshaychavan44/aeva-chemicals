@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aeva Chemicals — Specialists in Soaping Chemistry</title>
+  <title>Aeva Chemicals — Specialists in Soaping Chemistry</title><link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta name="description" content="Aeva Chemicals makes textile auxiliaries for reactive dyeing in Mumbai. AeSop low-temperature soaping agent and AeKomala cationic softener: cleaner shades, whiter whites, fewer baths." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261120b" />
+  <link rel="stylesheet" href="styles.css?v=20261120c" />
   <link rel="stylesheet" href="product-pages.css?v=20261119e" />
 <script src="cms-config.js?v=20261120a"></script></head>
 <body>
@@ -216,6 +216,7 @@
       <label class="inquiry__full"><span>Industry</span><select name="industry"><option value="">Select</option><option>Construction</option><option>Home &amp; Personal Care</option><option>Paints</option><option>Paper</option><option>Textile</option><option>Water Management</option><option>Other</option></select></label>
       <label class="inquiry__full"><span>Message *</span><textarea name="message" rows="4" required></textarea></label>
       <button class="btn btn--light inquiry__full" type="submit"><span class="roll">Send inquiry</span></button>
+      <p class="inquiry__sent inquiry__full" role="status" hidden>Your email app should open with your inquiry ready to send. If it doesn't, email us at <a href="mailto:info@aevachemicals.com">info@aevachemicals.com</a> or call <a href="tel:+919769999172">+91 97699 99172</a>.</p>
     </form>
     <div class="inquiry__map">
       <iframe title="Map showing Aeva Chemicals at Laxmi Industrial Estate, Andheri West, Mumbai" src="https://maps.google.com/maps?q=19.1344088,72.8317652&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
@@ -231,6 +232,8 @@
       const f = new FormData(e.target), g = k => (f.get(k) || '').trim();
       const body = `Name: ${g('name')}\nCompany: ${g('company')}\nEmail: ${g('email')}\nPhone: ${g('phone')}\nIndustry: ${g('industry')}\n\n${g('message')}`;
       location.href = 'mailto:info@aevachemicals.com?subject=' + encodeURIComponent('Website inquiry from ' + g('name')) + '&body=' + encodeURIComponent(body);
+      // mailto only works with an email app set up, so always say what happens next
+      e.target.querySelector('.inquiry__sent').hidden = false;
     });
   </script>
 
@@ -242,11 +245,10 @@
       <div class="footer__col">
         <p class="footer__h">Follow</p>
         <div class="footer__social">
-          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zm3.5 7H5v8h2.5v-8zM6.25 5.75a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8zM19 13.4c0-2.3-1.2-3.6-3.1-3.6-1.3 0-2 .7-2.4 1.3V10H11v8h2.5v-4.3c0-1.1.4-1.9 1.4-1.9s1.3.8 1.3 1.9V18H19v-4.6z"/></svg></a>
           <a href="https://wa.me/919820528708" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.4.2.5.3 0 .2 0 .7-.2 1.2z"/></svg></a>
           <a href="mailto:info@aevachemicals.com" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V6a1 1 0 011-1zm9 7.2L4.4 7H4v.6l8 5.6 8-5.6V7h-.4L12 12.2z"/></svg></a>
         </div>
-        <button class="footer__region" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c3 3.2 3 15.8 0 19M12 2.5c-3 3.2-3 15.8 0 19"/></svg><span>India · Global</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button>
+        <a class="footer__region" href="about.html#where-we-ship"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c3 3.2 3 15.8 0 19M12 2.5c-3 3.2-3 15.8 0 19"/></svg><span>India · Global</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
 
       <div class="footer__col">
