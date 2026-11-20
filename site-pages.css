@@ -192,10 +192,13 @@
 @keyframes prFlash { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
 .pr-stages { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-.pr-stage { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 14px; font-weight: 500; color: var(--ink-mute); }
+.pr-stage { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 14px; font-weight: 500; color: var(--ink-mute); cursor: pointer; transition: background .25s, border-color .25s, color .25s; }
 .pr-stage i { font: 500 12px/1 "IBM Plex Mono", monospace; font-style: normal; color: #8a6a1c; }
-.pr-stage.is-on { background: var(--emerald); border-color: var(--emerald); color: #fff; }
-.pr-stage.is-on i { color: var(--gold); }
+.pr-stage:hover { border-color: rgba(11, 68, 52, .45); color: var(--emerald); }
+.pr-stage:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.pr-stage[aria-selected="true"] { background: var(--emerald); border-color: var(--emerald); color: #fff; }
+.pr-stage[aria-selected="true"] i { color: var(--gold); }
+.pr-spot[hidden] { display: none; }
 .pr-spot { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); align-items: start; padding: clamp(24px, 3.5vw, 40px); border-radius: 22px; background: #fff; border: 1px solid var(--line); }
 .pr-spot__copy { display: grid; gap: 14px; }
 .pr-spot__copy h3 { font-size: clamp(26px, 2.6vw, 34px); font-weight: 500; letter-spacing: -.02em; }
@@ -219,6 +222,18 @@
 .pr-swatches figcaption { margin-top: 10px; font-size: 13px; font-weight: 500; }
 .pr-swatches figure:first-child figcaption { color: #a3411f; }
 .pr-swatches figure:last-child figcaption { color: var(--emerald); }
+/* each stage has its own fabric: dyeing keeps the blue above */
+.pr-swatches[data-look="spin"] .pr-swatch--bad { background: repeating-linear-gradient(80deg, rgba(255,255,255,.22) 0 1px, transparent 1px 9px), repeating-linear-gradient(-60deg, rgba(120,100,60,.18) 0 1px, transparent 1px 13px), #d4c7a6; }
+.pr-swatches[data-look="spin"] .pr-swatch--bad i { background: #f7f1e1; box-shadow: 0 0 6px 2px rgba(247,241,225,.7); }
+.pr-swatches[data-look="spin"] .pr-swatch--good { background: #d9cdae; }
+.pr-swatches[data-look="prep"] .pr-swatch--bad { background: radial-gradient(30% 24% at 32% 36%, rgba(160,120,40,.22), transparent 70%), radial-gradient(26% 22% at 70% 70%, rgba(140,110,50,.2), transparent 70%), #e2d4ac; }
+.pr-swatches[data-look="prep"] .pr-swatch--bad i { background: #b58a4a; opacity: .55; }
+.pr-swatches[data-look="prep"] .pr-swatch--good { background: #f6f4ee; }
+.pr-swatches[data-look="print"] .pr-swatch { background-color: #f6f3ea; background-size: 50% 33.4%; }
+.pr-swatches[data-look="print"] .pr-swatch--bad { background-image: radial-gradient(circle at 50% 50%, #b8405a 0 18%, rgba(184,64,90,.45) 26%, rgba(184,64,90,.12) 38%, transparent 46%); }
+.pr-swatches[data-look="print"] .pr-swatch--good { background-image: radial-gradient(circle at 50% 50%, #b8405a 0 24%, transparent 25%); }
+.pr-swatches[data-look="finish"] .pr-swatch--bad { background: repeating-linear-gradient(118deg, rgba(255,255,255,.16) 0 2px, transparent 2px 22px, rgba(0,0,0,.18) 22px 24px, transparent 24px 46px), repeating-linear-gradient(32deg, rgba(0,0,0,.1) 0 1px, transparent 1px 30px), #2f7f73; }
+.pr-swatches[data-look="finish"] .pr-swatch--good { background: radial-gradient(80% 60% at 30% 25%, rgba(255,255,255,.22), transparent 70%), #2f7f73; }
 
 .pr-steps .sp-card { background: rgba(255, 255, 255, .04); border-color: rgba(255, 255, 255, .12); }
 .pr-steps .sp-card h3 { color: #fff; font-size: 21px; }

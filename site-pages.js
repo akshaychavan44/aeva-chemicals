@@ -54,6 +54,28 @@
   }
   groupTabs.forEach(t => t.addEventListener('click', () => selectGroup(t.dataset.groupTab)));
 
+  /* textile spotlight: stage tabs */
+  const stageTabs = $$('[data-stage-tab]');
+  const stagePanels = $$('[data-stage-panel]');
+  function selectStage(tab, focus = false) {
+    stageTabs.forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+    });
+    stagePanels.forEach(p => { p.hidden = p.dataset.stagePanel !== tab.dataset.stageTab; });
+    if (focus) tab.focus();
+  }
+  stageTabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => selectStage(tab));
+    tab.addEventListener('keydown', e => {
+      const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!dir) return;
+      e.preventDefault();
+      selectStage(stageTabs[(i + dir + stageTabs.length) % stageTabs.length], true);
+    });
+  });
+
   const fromHash = location.hash.slice(1);
   if (fromHash && tabs.some(t => t.dataset.industryTab === fromHash)) selectIndustry(fromHash);
 
