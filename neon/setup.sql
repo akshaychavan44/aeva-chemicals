@@ -1,0 +1,11 @@
+create table if not exists aeva_content (
+  key text primary key check (key in ('whatwedo', 'home_products', 'page_aesop', 'page_aekomala', 'careers')),
+  data jsonb not null,
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists aeva_images (
+  id uuid primary key,
+  mime text not null check (mime in ('image/jpeg', 'image/png', 'image/webp')),
+  bytes bytea not null check (octet_length(bytes) between 1 and 3145728)
+);

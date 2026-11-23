@@ -1,20 +1,23 @@
-/* Aeva admin panel.
-   Signs in with Supabase (email + password), loads the editable content, builds a form
-   for each section from the schemas below, and saves the result back to Supabase.
-   The website (cms.js) reads the same rows, so a save shows on the site straight away. */
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
-  const cfg = window.AEVA_CMS || {};
   const show = id => {
     document.querySelectorAll(".screen").forEach(s => { s.hidden = s.id !== id; });
   };
 
-  if (!cfg.url || !cfg.anonKey || !window.supabase) {
-    show("screen-setup");
-    return;
+  async function request(query = "", body) {
+    try {
+      const response = await fetch("../api/cms" + query, body ? {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      } : {});
+      const result = await response.json();
+      if (!response.ok) return { error: result.error || "The request failed." };
+      return { data: result };
+    } catch {
+      return { error: "The admin API is unavailable. Open this page on the Vercel deployment." };
+    }
   }
-  const db = window.supabase.createClient(cfg.url, cfg.anonKey);
-  const BUCKET = "site-images";
 
   /* ---------------- what can be edited ---------------- */
   const T = (key, label, extra = {}) => ({ key, label, type: "text", ...extra });
@@ -253,7 +256,7 @@
     input.value = value;
     const preview = el("div", { class: "image-field__preview", role: "img", "aria-label": "Photo preview" });
     const status = el("small");
-    const resolve = v => (/^https?:/i.test(v) ? v : `../${v}`);
+    const resolve = v => (/^(https?:|\/)/i.test(v) ? v : `../${v}`);
     const paint = () => { preview.style.backgroundImage = input.value ? `url("${resolve(input.value).replace(/"/g, "%22")}")` : "none"; };
     input.addEventListener("input", () => { paint(); changed(); });
     const file = el("input", { type: "file", accept: "image/jpeg,image/png,image/webp", hidden: true });
@@ -261,15 +264,18 @@
       const f = file.files[0];
       file.value = "";
       if (!f) return;
-      if (f.size > 5 * 1024 * 1024) { status.textContent = "That photo is over 5 MB. Please use a smaller one."; return; }
+      if (f.size > 3 * 1024 * 1024) { status.textContent = "Please choose a photo up to 3 MB."; return; }
       status.textContent = "Uploading…";
-      const name = f.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
-      const path = `uploads/${Date.now()}-${name}`;
-      const { error } = await db.storage.from(BUCKET).upload(path, f, { cacheControl: "31536000", upsert: false });
-      if (error) { status.textContent = `Upload failed: ${error.message}`; return; }
-      input.value = db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-      status.textContent = "Uploaded. Save changes to show it on the website.";
-      paint(); changed();
+      const reader = new FileReader();
+      reader.onerror = () => { status.textContent = "Couldn’t read the photo."; };
+      reader.onload = async () => {
+        const { data, error } = await request("", { action: "upload", image: reader.result.split(",")[1] });
+        if (error) { status.textContent = `Upload failed: ${error}`; return; }
+        input.value = data.url;
+        status.textContent = "Uploaded. Save changes to show it on the website.";
+        paint(); changed();
+      };
+      reader.readAsDataURL(f);
     });
     paint();
     return {
@@ -278,7 +284,7 @@
           el("div", { class: "image-field__controls" },
             el("div", { class: "image-field__row" },
               el("button", { type: "button", class: "btn btn--ghost btn--small", text: "Upload a photo", onclick: () => file.click() }),
-              el("small", { class: "muted", text: "JPG, PNG or WebP, up to 5 MB. A square photo fits best." })),
+              el("small", { class: "muted", text: "JPG, PNG or WebP, up to 3 MB. A square photo fits best." })),
             input, status, file))),
       get: () => input.value.trim(),
     };
@@ -332,12 +338,10 @@
     const data = root.get();
     saveBtn.disabled = true;
     setStatus("Saving…");
-    const { data: { user } } = await db.auth.getUser();
-    const { error } = await db.from("site_content").upsert({ key: section.key, data, updated_by: user ? user.email : null }, { onConflict: "key" });
+    const { error } = await request("", { action: "save", key: section.key, data });
     if (error) {
       saveBtn.disabled = false;
-      const denied = /row-level security|permission/i.test(error.message);
-      setStatus(denied ? "Not saved: this account isn’t allowed to make changes." : `Not saved: ${error.message}`, "error");
+      setStatus(`Not saved: ${error}`, "error");
       return;
     }
     saved[section.key] = data;
@@ -357,10 +361,10 @@
     show("screen-editor");
     setStatus("Loading…");
     const [{ data: rows, error }, base] = await Promise.all([
-      db.from("site_content").select("key,data"),
+      request(),
       fetch("../data/content.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).catch(() => null),
     ]);
-    if (error) { setStatus(`Couldn’t load the content: ${error.message}`, "error"); return; }
+    if (error) { setStatus(`Couldn’t load the content: ${error}`, "error"); return; }
     saved = Object.fromEntries(rows.map(r => [r.key, r.data]));
     fallback = base;
     let last = null;
@@ -372,62 +376,34 @@
   const loginForm = $("#login-form"), loginMsg = $("#login-message");
   const say = (node, text, ok) => { node.textContent = text; node.hidden = !text; node.classList.toggle("is-ok", !!ok); };
 
-  async function afterSignIn(user) {
-    const { data: isAdmin, error } = await db.rpc("is_site_admin");
-    if (error || !isAdmin) {
-      await db.auth.signOut();
-      show("screen-login");
-      say(loginMsg, error ? `Couldn’t check your access: ${error.message}` : "This account isn’t an admin for the website. Ask the site owner to add your email.");
-      return;
-    }
-    startEditor(user);
-  }
-
   loginForm.addEventListener("submit", async e => {
     e.preventDefault();
     const email = loginForm.email.value.trim(), password = loginForm.password.value;
     if (!email || !password) { say(loginMsg, "Enter your email and password."); return; }
     const btn = loginForm.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Signing in…";
-    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    const { data, error } = await request("", { action: "login", email, password });
     btn.disabled = false; btn.textContent = "Sign in";
-    if (error) { say(loginMsg, /invalid/i.test(error.message) ? "That email and password don’t match." : error.message); return; }
+    if (error) { say(loginMsg, error); return; }
     say(loginMsg, "");
     loginForm.password.value = "";
-    afterSignIn(data.user);
-  });
-
-  $("#forgot").addEventListener("click", async () => {
-    const email = loginForm.email.value.trim();
-    if (!email) { say(loginMsg, "Enter your email above, then choose “Forgot your password?” again."); return; }
-    const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: location.href.split("#")[0] });
-    say(loginMsg, error ? error.message : "If that email has an admin account, a link to choose a new password is on its way.", !error);
-  });
-
-  const recoveryForm = $("#recovery-form"), recoveryMsg = $("#recovery-message");
-  recoveryForm.addEventListener("submit", async e => {
-    e.preventDefault();
-    const password = recoveryForm.password.value;
-    if (password.length < 8) { say(recoveryMsg, "Use at least 8 characters."); return; }
-    const { data, error } = await db.auth.updateUser({ password });
-    if (error) { say(recoveryMsg, error.message); return; }
-    afterSignIn(data.user);
+    startEditor(data.user);
   });
 
   $("#sign-out").addEventListener("click", async () => {
     if (dirty && !confirm("You have unsaved changes. Sign out anyway?")) return;
+    const { error } = await request("", { action: "logout" });
+    if (error) { setStatus(error, "error"); return; }
     dirty = false;
-    await db.auth.signOut();
+    current = null;
     show("screen-login");
   });
 
-  let recovering = false;
-  db.auth.onAuthStateChange(event => {
-    if (event === "PASSWORD_RECOVERY") { recovering = true; show("screen-recovery"); }
-  });
-  db.auth.getSession().then(({ data: { session } }) => {
-    if (recovering) return;
-    if (session) afterSignIn(session.user);
+  request("?action=session").then(({ data, error }) => {
+    if (error || !data?.configured) {
+      if (error) $("#setup-message").textContent = error;
+      show("screen-setup");
+    } else if (data.user) startEditor(data.user);
     else show("screen-login");
   });
 })();

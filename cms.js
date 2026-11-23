@@ -1,7 +1,3 @@
-/* Editable content: loads what the admin panel saved in Supabase and rebuilds the
-   product lists, product pages and job openings with the same markup as the HTML.
-   If Supabase isn't set up (cms-config.js) or can't be reached, the pages keep the
-   content written into their HTML. The admin panel reuses AevaCMS.render for previews. */
 (() => {
   const ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   const EMAIL = "info@aevachemicals.com";
@@ -105,12 +101,9 @@
   }
   window.AevaCMS = { render };
 
-  const cfg = window.AEVA_CMS || {};
   const ready = () => document.documentElement.classList.remove("cms-wait");
-  if (!cfg.url || !cfg.anonKey || !document.querySelector("[data-cms]")) { ready(); return; }
-  fetch(`${cfg.url.replace(/\/$/, "")}/rest/v1/site_content?select=key,data`, {
-    headers: { apikey: cfg.anonKey, Authorization: `Bearer ${cfg.anonKey}` },
-  })
+  if (!document.querySelector("[data-cms]")) return;
+  fetch("api/cms")
     .then(r => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
     .then(rows => {
       const content = {};
