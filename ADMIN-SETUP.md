@@ -1,6 +1,6 @@
 # Aeva Admin setup on Vercel
 
-The editor at `/admin/index.html` manages products, product pages, home page product cards and careers. Vercel hosts the API and Neon stores saved edits and uploaded photos. Until the first save, each section uses its built-in content.
+The editor at `/admin/index.html` manages products, home page product cards and careers. Vercel hosts the API and Neon stores saved edits and uploaded photos. Until the first save, each section uses its built-in content.
 
 ## Connect production
 

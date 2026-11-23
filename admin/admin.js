@@ -23,38 +23,6 @@
   const T = (key, label, extra = {}) => ({ key, label, type: "text", ...extra });
   const A = (key, label, extra = {}) => ({ key, label, type: "textarea", rows: 3, ...extra });
 
-  const PRODUCT_PAGE = { type: "object", fields: [
-    { key: "", label: "Top of the page", type: "object", flat: true, fields: [
-      T("name", "Product name"),
-      T("label", "Small label", { help: "For example: TEXTILE AUXILIARIES / 01" }),
-      T("category", "Category", { help: "For example: Low-temperature soaping agent" }),
-      A("headline", "Headline", { rows: 2, help: "Each line shows on its own line." }),
-      A("description", "Description"),
-      T("suppliedAs", "Supplied as", { help: "For example: Concentrated liquid" }),
-    ] },
-    { key: "benefits", label: "Benefits", type: "list", singular: "benefit", itemTitle: "title",
-      item: [T("title", "Title"), A("text", "Text", { rows: 2 })] },
-    { key: "profile", label: "Product profile", type: "object", fields: [
-      A("title", "Heading", { rows: 2 }), A("text", "Text", { rows: 2 }),
-    ] },
-    { key: "technical", label: "Technical details", type: "list", singular: "detail", itemTitle: "term",
-      item: [T("term", "Property", { help: "For example: Ionic character" }), T("value", "Value")] },
-    { key: "application", label: "Application guidance", type: "object", fields: [
-      A("title", "Heading", { rows: 2 }),
-      { key: "steps", label: "Steps", type: "list", singular: "step", itemTitle: "title",
-        item: [T("title", "Step"), A("text", "Details", { rows: 2 })] },
-      T("dosageTitle", "Dosage table heading"),
-      { key: "dosage", label: "Dosage table", type: "list", singular: "row", itemTitle: "label",
-        item: [T("label", "Condition"), T("value", "Value")] },
-      A("note", "Note under the table"),
-    ] },
-    { key: "documents", label: "Documents", type: "object", fields: [
-      T("title", "Heading"),
-      { key: "links", label: "Links", type: "list", singular: "link", itemTitle: "label",
-        item: [T("label", "Link text"), T("url", "Link", { help: "A file on the site (assets/documents/…pdf), a web address, or mailto:info@aevachemicals.com" })] },
-    ] },
-  ] };
-
   const SECTIONS = [
     { key: "whatwedo", nav: "Products", sub: "What we do page", page: "../products.html#range",
       intro: "The six industries on the What we do page. Add, change or remove product groups and products, and update the product counts.",
@@ -91,10 +59,6 @@
           T("imageAlt", "Photo description", { help: "Describes the photo for screen readers and search engines." }),
         ] },
       ] } },
-    { key: "page_aesop", nav: "AeSop page", sub: "Product page", page: "../aesop.html",
-      intro: "Everything on the AeSop product page.", schema: PRODUCT_PAGE },
-    { key: "page_aekomala", nav: "AeKomala page", sub: "Product page", page: "../aekomala.html",
-      intro: "Everything on the AeKomala product page.", schema: PRODUCT_PAGE },
     { key: "careers", nav: "Careers", sub: "Job openings", page: "../careers.html",
       intro: "The introduction and open roles on the Careers page.",
       schema: { type: "object", fields: [

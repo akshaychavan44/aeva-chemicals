@@ -1,7 +1,7 @@
 import { createHash, createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 
-const keys = new Set(["whatwedo", "home_products", "page_aesop", "page_aekomala", "careers"]);
+const editableKeys = new Set(["whatwedo", "home_products", "careers"]);
 const sessionSeconds = 8 * 3600;
 const cookieName = "__Host-aeva-admin";
 
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     const sql = neon(databaseUrl);
 
     if (action === "save") {
-      if (!keys.has(body.key) || !body.data || typeof body.data !== "object" || Array.isArray(body.data)) {
+      if (!editableKeys.has(body.key) || !body.data || typeof body.data !== "object" || Array.isArray(body.data)) {
         return res.status(400).json({ error: "Invalid content section." });
       }
       await sql`insert into aeva_content (key, data) values (${body.key}, ${JSON.stringify(body.data)}::jsonb)
