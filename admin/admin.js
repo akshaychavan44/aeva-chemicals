@@ -47,18 +47,6 @@
           ] },
         ] },
       ] } },
-    { key: "home_products", nav: "Home page cards", sub: "Product cards", page: "../index.html#products",
-      intro: "The product cards in “Our product range” on the home page.",
-      schema: { type: "object", fields: [
-        { key: "cards", label: "Cards", type: "list", singular: "card", itemTitle: "name", item: [
-          T("name", "Product name"),
-          T("label", "Label above the name", { help: "For example: Low-temperature soaping agent" }),
-          A("description", "Description"),
-          T("link", "Card link", { help: "The page the card opens, for example aesop.html" }),
-          { key: "image", label: "Photo", type: "image" },
-          T("imageAlt", "Photo description", { help: "Describes the photo for screen readers and search engines." }),
-        ] },
-      ] } },
     { key: "careers", nav: "Careers", sub: "Job openings", page: "../careers.html",
       intro: "The introduction and open roles on the Careers page.",
       schema: { type: "object", fields: [
@@ -128,7 +116,6 @@
 
     if (field.type === "list") return buildList(field, Array.isArray(value) ? value : [], changed);
 
-    if (field.type === "image") return buildImage(field, value || "", changed);
 
     const id = `f${++uid}`;
     const input = field.type === "textarea"
@@ -211,46 +198,6 @@
         field.help ? el("small", { class: "muted", text: field.help }) : null,
         box, empty, add),
       get: () => items.map(it => it.body.get()),
-    };
-  }
-
-  function buildImage(field, value, changed) {
-    const id = `f${++uid}`;
-    const input = el("input", { id, type: "text", placeholder: "assets/your-photo.webp or https://…" });
-    input.value = value;
-    const preview = el("div", { class: "image-field__preview", role: "img", "aria-label": "Photo preview" });
-    const status = el("small");
-    const resolve = v => (/^(https?:|\/)/i.test(v) ? v : `../${v}`);
-    const paint = () => { preview.style.backgroundImage = input.value ? `url("${resolve(input.value).replace(/"/g, "%22")}")` : "none"; };
-    input.addEventListener("input", () => { paint(); changed(); });
-    const file = el("input", { type: "file", accept: "image/jpeg,image/png,image/webp", hidden: true });
-    file.addEventListener("change", async () => {
-      const f = file.files[0];
-      file.value = "";
-      if (!f) return;
-      if (f.size > 3 * 1024 * 1024) { status.textContent = "Please choose a photo up to 3 MB."; return; }
-      status.textContent = "Uploading…";
-      const reader = new FileReader();
-      reader.onerror = () => { status.textContent = "Couldn’t read the photo."; };
-      reader.onload = async () => {
-        const { data, error } = await request("", { action: "upload", image: reader.result.split(",")[1] });
-        if (error) { status.textContent = `Upload failed: ${error}`; return; }
-        input.value = data.url;
-        status.textContent = "Uploaded. Save changes to show it on the website.";
-        paint(); changed();
-      };
-      reader.readAsDataURL(f);
-    });
-    paint();
-    return {
-      node: el("div", { class: "field" }, el("span", { text: field.label }),
-        el("div", { class: "image-field" }, preview,
-          el("div", { class: "image-field__controls" },
-            el("div", { class: "image-field__row" },
-              el("button", { type: "button", class: "btn btn--ghost btn--small", text: "Upload a photo", onclick: () => file.click() }),
-              el("small", { class: "muted", text: "JPG, PNG or WebP, up to 3 MB. A square photo fits best." })),
-            input, status, file))),
-      get: () => input.value.trim(),
     };
   }
 

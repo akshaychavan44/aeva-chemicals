@@ -1,7 +1,7 @@
-import { createHash, createHmac, randomUUID, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 
-const editableKeys = new Set(["whatwedo", "home_products", "careers"]);
+const editableKeys = new Set(["whatwedo", "careers"]);
 const sessionSeconds = 8 * 3600;
 const cookieName = "__Host-aeva-admin";
 
@@ -14,12 +14,6 @@ function signature(expiry, password, email) {
 
 function sessionCookie(value, age) {
   return `${cookieName}=${value}; Max-Age=${age}; Path=/; Secure; HttpOnly; SameSite=Strict`;
-}
-
-function imageType(bytes) {
-  if (bytes.subarray(0, 3).toString("hex") === "ffd8ff") return "image/jpeg";
-  if (bytes.subarray(0, 8).toString("hex") === "89504e470d0a1a0a") return "image/png";
-  if (bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP") return "image/webp";
 }
 
 export default async function handler(req, res) {
@@ -85,17 +79,6 @@ export default async function handler(req, res) {
       await sql`insert into aeva_content (key, data) values (${body.key}, ${JSON.stringify(body.data)}::jsonb)
         on conflict (key) do update set data = excluded.data, updated_at = now()`;
       return res.json({});
-    }
-    if (action === "upload") {
-      const bytes = Buffer.from(typeof body.image === "string" ? body.image : "", "base64");
-      const mime = imageType(bytes);
-      if (!mime || bytes.length > 3 * 1024 * 1024) {
-        return res.status(400).json({ error: "Choose a JPG, PNG or WebP of up to 3 MB." });
-      }
-      const id = randomUUID();
-      await sql`insert into aeva_images (id, mime, bytes)
-        values (${id}, ${mime}, decode(${bytes.toString("base64")}, 'base64'))`;
-      return res.json({ url: `/api/cms?image=${id}` });
     }
     return res.status(400).json({ error: "Unknown admin action." });
   } catch {
