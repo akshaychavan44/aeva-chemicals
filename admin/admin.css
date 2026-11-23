@@ -40,7 +40,7 @@ code { font: 13px "IBM Plex Mono", monospace; background: rgba(11, 68, 52, .08);
 
 /* fields */
 .field { display: grid; gap: 6px; }
-.field > span { font-size: 14px; font-weight: 500; }
+.field > span, .field > label { font-size: 14px; font-weight: 500; }
 .field small { color: var(--ink-soft); font-size: 13px; }
 .field input, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; transition: border-color .2s; }
 .field textarea { resize: vertical; line-height: 1.5; }
@@ -112,3 +112,21 @@ code { font: 13px "IBM Plex Mono", monospace; background: rgba(11, 68, 52, .08);
   .savebar { flex-wrap: wrap; }
   .savebar p { flex-basis: 100%; }
 }
+
+.password-field { position: relative; }
+.password-field input { padding-inline-end: 118px; }
+.password-toggle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 4px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--leaf);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.password-toggle:focus-visible { outline: 2px solid var(--leaf); outline-offset: -3px; }

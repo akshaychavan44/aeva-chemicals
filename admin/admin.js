@@ -374,11 +374,21 @@
 
   /* ---------------- sign in ---------------- */
   const loginForm = $("#login-form"), loginMsg = $("#login-message");
+  const passwordField = $("#login-password"), passwordToggle = $("#password-toggle");
+
+  function setPasswordVisible(visible) {
+    passwordField.type = visible ? "text" : "password";
+    passwordToggle.textContent = visible ? "Hide password" : "Show password";
+  }
+
+  passwordToggle.addEventListener("click", () => setPasswordVisible(passwordField.type === "password"));
+
   const say = (node, text, ok) => { node.textContent = text; node.hidden = !text; node.classList.toggle("is-ok", !!ok); };
 
   loginForm.addEventListener("submit", async e => {
     e.preventDefault();
-    const email = loginForm.email.value.trim(), password = loginForm.password.value;
+    const email = loginForm.email.value.trim(), password = passwordField.value;
+    setPasswordVisible(false);
     if (!email || !password) { say(loginMsg, "Enter your email and password."); return; }
     const btn = loginForm.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Signing in…";
@@ -386,7 +396,7 @@
     btn.disabled = false; btn.textContent = "Sign in";
     if (error) { say(loginMsg, error); return; }
     say(loginMsg, "");
-    loginForm.password.value = "";
+    passwordField.value = "";
     startEditor(data.user);
   });
 

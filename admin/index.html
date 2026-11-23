@@ -8,7 +8,7 @@
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="admin.css?v=20261120a">
+  <link rel="stylesheet" href="admin.css?v=password-toggle1">
 </head>
 <body>
   <!-- setup status -->
@@ -28,7 +28,13 @@
       <h1>Sign in</h1>
       <p class="muted">Edit products, product pages and job openings.</p>
       <label class="field"><span>Email</span><input type="email" name="email" autocomplete="username" required></label>
-      <label class="field"><span>Password</span><input type="password" name="password" autocomplete="current-password" required></label>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <div class="password-field">
+          <input id="login-password" type="password" name="password" autocomplete="current-password" required>
+          <button class="password-toggle" id="password-toggle" type="button" aria-controls="login-password">Show password</button>
+        </div>
+      </div>
       <p class="message" id="login-message" role="alert" hidden></p>
       <button class="btn btn--primary btn--wide" type="submit">Sign in</button>
     </form>
@@ -65,6 +71,6 @@
     </div>
   </div>
 
-  <script src="admin.js?v=neon1"></script>
+  <script src="admin.js?v=password-toggle1"></script>
 </body>
 </html>
