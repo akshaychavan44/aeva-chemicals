@@ -4,6 +4,16 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- Refresh opens on the hero ----------
+     On a reload the browser would return to the last scroll position or to a
+     #section in the address; send the visitor back to the top instead. Links and
+     back/forward still land where they point. */
+  if (performance.getEntriesByType("navigation")[0]?.type === "reload") {
+    history.scrollRestoration = "manual";
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    scrollTo({ top: 0, behavior: "instant" });
+  }
+
   /* ---------- About: the soaping bath, in a flask ----------
      A pinned glass flask. Scrolling runs the wash-off: murky dyed liquor with
      loose dye swirling in it, gold AeSop drops falling in, the liquor turning
