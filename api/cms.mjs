@@ -31,7 +31,8 @@ export default async function handler(req, res) {
   const now = Math.floor(Date.now() / 1000);
   const token = (req.headers.cookie || "").split(/;\s*/).find(part => part.startsWith(cookieName + "="))?.slice(cookieName.length + 1);
   const [expiry, mac] = (token || "").split(".");
-  const configured = Boolean(email && password?.length >= 32 && databaseUrl);
+  const passwordLength = Array.from(password ?? "").length;
+  const configured = Boolean(email && databaseUrl && passwordLength >= 10 && passwordLength <= 20);
   const user = configured && /^\d{10}$/.test(expiry) && Number(expiry) > now &&
     matches(mac, signature(expiry, password, email)) ? { email } : null;
 

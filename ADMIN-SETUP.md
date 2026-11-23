@@ -8,7 +8,7 @@ The editor at `/admin/index.html` manages products, product pages, home page pro
 2. In the Aeva Vercel project, open **Settings → Environment Variables**. Set these for **Production**:
    - `DATABASE_URL`: keep the existing pooled Neon connection URL.
    - `CMS_ADMIN_EMAIL`: the client's admin email.
-   - `CMS_ADMIN_PASSWORD`: a unique, randomly generated password of at least 32 characters. Use a password manager and store the value as a Vercel secret.
+   - `CMS_ADMIN_PASSWORD`: a unique, randomly generated password of 10 to 20 characters. Use 20 characters when possible and store the value as a Vercel secret.
 3. Deploy the code containing `api/cms.mjs` on Vercel. The project uses the repository root and the **Other** framework preset. Redeploy whenever the server-side settings change.
 4. Open [the admin panel](https://aeva-chemicals.vercel.app/admin/index.html), sign in and save an edit. Reload the matching public page on the same Vercel domain to check it.
 
