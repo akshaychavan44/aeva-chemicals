@@ -67,7 +67,7 @@
   function renderProductPage(d, el) {
     if (!d) return;
     const app = d.application || {}, profile = d.profile || {}, docs = d.documents || {};
-    el.innerHTML = `<div class="p-breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="index.html#products">What we do</a><span aria-hidden="true">/</span><span>${esc(d.name)}</span></div>
+    el.innerHTML = `<div class="p-breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="products.html">What we do</a><span aria-hidden="true">/</span><span>${esc(d.name)}</span></div>
 <section class="p-hero" aria-labelledby="product-title"><div class="p-hero__copy"><p class="p-label">${esc(d.label)}</p><h1 id="product-title">${esc(d.name)}</h1><p class="p-category">${esc(d.category)}</p><h2>${lines(d.headline)}</h2><p class="p-description">${esc(d.description)}</p><div class="p-actions"><a class="btn btn--primary" href="${esc(mail(`${d.name} trial sample`))}">Request a sample <span aria-hidden="true">↗</span></a><a class="p-text-link" href="#technical">View technical details <span aria-hidden="true">↓</span></a></div>${d.suppliedAs ? `<p class="p-form">SUPPLIED AS <strong>${esc(d.suppliedAs)}</strong></p>` : ""}</div>
 </section>
 <section class="p-benefits" aria-label="Product benefits">${list(d.benefits).map((b, i) => `<article><span class="p-index">${pad(i + 1)}</span><h3>${esc(b.title)}</h3><p>${esc(b.text)}</p></article>`).join("")}</section>

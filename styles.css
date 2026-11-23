@@ -363,6 +363,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* Tailor-made: copy on the left, the liquid artwork (script.js) on the right */
 .formulation { display: grid; grid-template-columns: 1fr 1fr; min-height: 100svh; scroll-margin-top: 72px; }
 .formulation .split-panel__text { padding-bottom: clamp(56px, 6vw, 88px); }
+.formulation__lead { text-align: justify; }
 .formulation .tailor { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 640px; }
 .tailor > div { background: var(--tint); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 4px; }
 .tailor i { width: 22px; height: 22px; border-radius: 6px; margin-bottom: 8px; }
@@ -404,7 +405,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    ========================================================= */
 .capabilities {
   position: relative; color: var(--cream); overflow: clip;
-  background: radial-gradient(ellipse 62% 58% at 50% 54%, rgba(11, 107, 79, .55), rgba(11, 107, 79, 0) 72%), var(--emerald);
+  background: #000; /* black, so it reads as a new section after the emerald hero */
 }
 .cap-stage {
   --fs: clamp(20px, min(3.95vw, calc((100svh - 190px) / 8.2)), 76px); /* as large as the width and the screen height allow */
