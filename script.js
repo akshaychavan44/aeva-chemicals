@@ -591,11 +591,24 @@
   const onScroll = () => nav.classList.toggle("is-scrolled", scrollY > (heroWrap ? heroWrap.offsetTop + heroWrap.offsetHeight - 80 : 40));
   addEventListener("scroll", onScroll, { passive: true });
   onScroll();
-  $(".nav__burger").addEventListener("click", (e) => {
-    const open = nav.classList.toggle("is-open");
-    e.currentTarget.setAttribute("aria-expanded", open);
+  const button = nav.querySelector('.nav__burger');
+  const close = () => {
+    nav.classList.remove('is-open');
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-label', 'Open menu');
+  };
+  button.addEventListener('click', () => {
+    const open = nav.classList.toggle('is-open');
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
-  $$(".nav__links a").forEach((a) => a.addEventListener("click", () => nav.classList.remove("is-open")));
+  nav.querySelectorAll('a[href]').forEach(link => link.addEventListener('click', close));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && nav.classList.contains('is-open')) {
+      close();
+      button.focus();
+    }
+  });
 
   /* Dock magnification: transform links without shifting the header layout. */
   (() => {

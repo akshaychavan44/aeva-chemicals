@@ -12,7 +12,7 @@
     button.setAttribute('aria-expanded', String(open));
     button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
-  nav.querySelectorAll('.nav__links a').forEach(link => link.addEventListener('click', close));
+  nav.querySelectorAll('a[href]').forEach(link => link.addEventListener('click', close));
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && nav.classList.contains('is-open')) {
       close();
