@@ -499,7 +499,11 @@
     if (reduced) { load(N - 1); return; }
 
     load(0); load(N - 1);
-    for (let step = 16; step >= 1; step /= 2) for (let i = 0; i < N; i += step) load(i);
+    // Keep the scroll animation on phones with a smaller set of decoded frames.
+    const minimumStep = phone.matches || matchMedia("(pointer: coarse)").matches ? 8 : 1;
+    for (let step = 16; step >= minimumStep; step /= 2) {
+      for (let i = 0; i < N; i += step) load(i);
+    }
 
     const tick = () => {
       cur += (target - cur) * 0.22; // a little easing so wheel steps glide
@@ -534,6 +538,7 @@
   let idx = 0;
   const setRotWidth = () => (rot.style.width = items[idx].offsetWidth + "px");
   function nextWord() {
+    if (idx >= items.length - 1) return;
     idx++;
     track.style.transition = "";
     track.style.transform = `translateY(${-idx * 0.98}em)`;
@@ -560,7 +565,11 @@
     }, counter.n * 28 + 300);
     if (!reduced) setInterval(nextWord, 2800);
   };
-  (document.fonts ? document.fonts.ready : Promise.resolve()).then(start);
+  Promise.race([
+    document.fonts?.ready ?? Promise.resolve(),
+    new Promise(resolve => setTimeout(resolve, 1200)),
+  ]).then(start);
+  document.fonts?.ready.then(setRotWidth);
   addEventListener("resize", setRotWidth);
 
   /* ---------- Scroll reveals ---------- */

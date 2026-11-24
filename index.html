@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=liquid-control1" />
+  <link rel="stylesheet" href="styles.css?v=mobile-intro2" />
   <link rel="stylesheet" href="product-pages.css?v=20261119e" />
 </head>
 <body>
@@ -29,15 +29,16 @@
   <script>
     (() => {
       const loader = document.getElementById("aevaCinematicLoader");
-      const skipIntro = matchMedia("(max-width: 860px), (pointer: coarse), (prefers-reduced-motion: reduce)");
+      const skipIntro = matchMedia("(prefers-reduced-motion: reduce)");
       if (skipIntro.matches) {
         loader.remove();
         return;
       }
 
+      const mobile = matchMedia("(max-width: 860px), (pointer: coarse)").matches;
       loader.hidden = false;
-      setTimeout(() => loader.classList.add("is-revealed"), 2000);
-      setTimeout(() => loader.remove(), 4000);
+      setTimeout(() => loader.classList.add("is-revealed"), mobile ? 650 : 2000);
+      setTimeout(() => loader.remove(), mobile ? 1250 : 4000);
       window.addEventListener("pageshow", event => {
         if (event.persisted) loader.remove();
       });
@@ -266,7 +267,7 @@
     </div>
   </footer>
 
-  <script src="script.js?v=liquid-control1"></script>
+  <script src="script.js?v=mobile-frames1"></script>
 <script src="cms.js?v=neon1"></script>  <a class="whatsapp-float" href="https://wa.me/message/NIWCUWQATJXNP1" target="_blank" rel="noopener" aria-label="Chat with Aeva Chemicals on WhatsApp"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.4 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.4.2.5.3 0 .2 0 .7-.2 1.2z"/></svg></a>
 </body>
 </html>
