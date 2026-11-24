@@ -117,7 +117,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* =========================================================
    PRELOADER — two curtains part to reveal the page (index.html)
    ========================================================= */
-.aeva-cinematic-loader { position: fixed; inset: 0; z-index: 1000; overflow: hidden; user-select: none; -webkit-user-select: none; }
+.aeva-cinematic-loader { position: fixed; inset: 0; z-index: 1000; overflow: hidden; pointer-events: none; user-select: none; -webkit-user-select: none; }
+.aeva-cinematic-loader[hidden] { display: none; }
+@media (max-width: 860px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .aeva-cinematic-loader { display: none; }
+}
 .aeva-curtain {
   position: absolute; left: 0; width: 100%; height: 50.5vh;
   display: flex; justify-content: center;

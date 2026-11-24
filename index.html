@@ -8,12 +8,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=whatsapp-float1" />
+  <link rel="stylesheet" href="styles.css?v=mobile-startup1" />
   <link rel="stylesheet" href="product-pages.css?v=20261119e" />
 </head>
 <body>
   <!-- ============ CINEMATIC PRELOADER ============ -->
-  <div class="aeva-cinematic-loader" id="aevaCinematicLoader" aria-hidden="true">
+  <div class="aeva-cinematic-loader" id="aevaCinematicLoader" hidden aria-hidden="true">
     <div class="aeva-curtain aeva-curtain--top">
       <div class="aeva-curtain-inner aeva-curtain-inner--top">
         <p class="aeva-word aeva-word--aeva">AEVA</p>
@@ -27,16 +27,20 @@
     </div>
   </div>
   <script>
-    // Hold the page still for two seconds, part the curtains, then remove the loader.
     (() => {
       const loader = document.getElementById("aevaCinematicLoader");
-      const root = document.documentElement;
-      root.style.overflow = "hidden";
-      setTimeout(() => {
-        loader.classList.add("is-revealed");
-        root.style.overflow = "";
-        setTimeout(() => loader.remove(), 2000);
-      }, 2000);
+      const skipIntro = matchMedia("(max-width: 860px), (pointer: coarse), (prefers-reduced-motion: reduce)");
+      if (skipIntro.matches) {
+        loader.remove();
+        return;
+      }
+
+      loader.hidden = false;
+      setTimeout(() => loader.classList.add("is-revealed"), 2000);
+      setTimeout(() => loader.remove(), 4000);
+      window.addEventListener("pageshow", event => {
+        if (event.persisted) loader.remove();
+      });
     })();
   </script>
 
@@ -125,8 +129,8 @@
     <section class="formulation" id="tailor" aria-labelledby="tailor-title">
       <div class="split-panel__text green">
         <p class="eyebrow">Built for the bath</p>
-        <h2 class="display reveal-words" id="tailor-title">Tailor-made for your mill.</h2>
-        <p class="reveal-up formulation__lead">Formulated from the molecule up. Aeva Chemicals makes speciality chemicals in house, from R&amp;D to the batch you receive. Tailor-made, APEO-free formulations.</p>
+        <h2 class="display reveal-words" id="tailor-title">Formulated from the molecule up</h2>
+        <p class="reveal-up formulation__lead">Aeva Chemicals makes speciality chemicals in house, from R&amp;D to the batch you receive. Tailor-made, APEO-free formulations.</p>
         <div class="tailor reveal-up">
           <div><i style="background:var(--leaf)"></i><b>Water hardness</b><span>Tuned to your water</span></div>
           <div><i style="background:var(--emerald)"></i><b>Machine type</b><span>Jet, soft-flow, winch</span></div>
