@@ -730,7 +730,6 @@
     const caption = $(".liquid-scene__bottom", scene);
     const canvas = $(".liquid-scene__canvas", scene);
     const image = $(".liquid-scene__image", scene);
-    const toggle = $(".liquid-scene__toggle", scene);
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     const sideBySide = matchMedia("(min-width: 861px)");
     const heading = $("#tailor-title", copy);
@@ -842,9 +841,9 @@
     const box = gl.getUniformLocation(program, "box");
     gl.uniform1i(gl.getUniformLocation(program, "artwork"), 0);
 
-    let loaded = false, visible = false, paused = false, lost = false;
+    let loaded = false, visible = false, lost = false;
     let frame = 0, elapsed = 0, previous = 0;
-    const canAnimate = () => loaded && visible && !paused && !motion.matches && !document.hidden && !lost;
+    const canAnimate = () => loaded && visible && !motion.matches && !document.hidden && !lost;
     function paint() {
       if (!loaded || lost) return;
       gl.uniform1f(phase, (elapsed % 20000) * Math.PI / 10000);
@@ -865,7 +864,6 @@
       cancelAnimationFrame(frame);
       frame = 0;
       previous = 0;
-      toggle.hidden = !loaded || motion.matches || lost;
       if (canAnimate()) frame = requestAnimationFrame(tick);
       else paint();
     }
@@ -923,12 +921,6 @@
     new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(scene);
     document.addEventListener("visibilitychange", sync);
     motion.addEventListener("change", sync);
-    toggle.addEventListener("click", () => {
-      paused = !paused;
-      toggle.setAttribute("aria-pressed", String(paused));
-      toggle.setAttribute("aria-label", paused ? "Play liquid animation" : "Pause liquid animation");
-      sync();
-    });
     canvas.addEventListener("webglcontextlost", () => {
       lost = true;
       scene.classList.remove("is-ready");

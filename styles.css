@@ -386,13 +386,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .liquid-scene__bottom { bottom: var(--caption-bottom, 34px); align-items: flex-end; } /* level with the cards, set by script.js */
 .liquid-scene__bottom p { font-size: clamp(32px, 3.2vw, 48px); letter-spacing: -.025em; line-height: 1.1; font-weight: 400; }
 .liquid-scene__bottom p span { color: var(--leaf); }
-.liquid-scene__toggle { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid rgba(11, 68, 52, .4); border-radius: 50%; background: rgba(244, 241, 232, .85); transition: background .2s, border-color .2s; }
-.liquid-scene__toggle[hidden] { display: none; }
-.liquid-scene__toggle:hover { background: var(--cream); border-color: var(--leaf); }
-.liquid-scene__toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; }
-.liquid-scene__play { display: none; }
-.liquid-scene__toggle[aria-pressed="true"] .liquid-scene__pause { display: none; }
-.liquid-scene__toggle[aria-pressed="true"] .liquid-scene__play { display: block; }
 @media (max-width: 860px) {
   .formulation { grid-template-columns: 1fr; min-height: 0; }
   .liquid-scene { min-height: 0; aspect-ratio: 1; }
