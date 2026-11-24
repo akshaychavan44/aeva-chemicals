@@ -483,7 +483,26 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .footer__h { text-transform: uppercase; font-size: 21px; font-weight: 500; margin-bottom: 24px; letter-spacing: .01em; }
 .footer__sub a { font-size: 21px; color: var(--cream-soft); line-height: 1.43; }
-.footer__social { display: flex; gap: 18px; }
+.whatsapp-float {
+  position: fixed;
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--cream);
+  border-radius: 50%;
+  background: var(--leaf);
+  color: var(--cream);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .2);
+}
+.whatsapp-float svg { width: 24px; height: 24px; fill: currentColor; }
+.whatsapp-float:hover { background: var(--emerald); }
+.whatsapp-float:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.footer__social { display: flex; align-items: center; gap: clamp(10px, 3vw, 18px); }
+.footer__social a { display: grid; place-items: center; }
 .footer__social svg { width: 26px; height: 26px; fill: var(--cream-soft); transition: fill .3s, transform .3s var(--ease-out); }
 .footer__social a:hover svg { fill: var(--gold); transform: translateY(-3px); }
 .footer__region {
