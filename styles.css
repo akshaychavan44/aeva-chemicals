@@ -502,7 +502,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .whatsapp-float svg { width: 24px; height: 24px; fill: currentColor; }
 .whatsapp-float:hover { background: var(--emerald); }
 .whatsapp-float:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-.footer__social { display: flex; align-items: center; gap: clamp(10px, 3vw, 18px); }
+.footer__social { display: flex; align-items: center; gap: clamp(5px, calc((100% - 208px) / 7), 18px); }
 .footer__social a { display: grid; place-items: center; }
 .footer__social svg { width: 26px; height: 26px; fill: var(--cream-soft); transition: fill .3s, transform .3s var(--ease-out); }
 .footer__social a:hover svg { fill: var(--gold); transform: translateY(-3px); }
