@@ -8,7 +8,7 @@
      On a reload the browser would return to the last scroll position or to a
      #section in the address; send the visitor back to the top instead. Links and
      back/forward still land where they point. */
-  if (performance.getEntriesByType("navigation")[0]?.type === "reload") {
+  if (location.hash !== "#inquiry" && performance.getEntriesByType("navigation")[0]?.type === "reload") {
     history.scrollRestoration = "manual";
     if (location.hash) history.replaceState(null, "", location.pathname + location.search);
     scrollTo({ top: 0, behavior: "instant" });
@@ -319,7 +319,7 @@
       ctx.strokeStyle = "rgba(11,68,52,.45)";
       ctx.fillStyle = "rgba(11,68,52,.6)";
       ctx.lineWidth = 1.2 * px;
-      ctx.font = `${10 * px}px "IBM Plex Mono", monospace`;
+      ctx.font = `${10 * px}px "Jost", system-ui, sans-serif`;
       ctx.textBaseline = "middle";
       [[0.56, "300"], [0.68, "200"], [0.8, "100"]].forEach(([y, label]) => {
         const xr = halfWidth(y) - 0.03;

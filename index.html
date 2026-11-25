@@ -7,7 +7,7 @@
   <meta name="description" content="Aeva Chemicals makes textile auxiliaries for reactive dyeing in Mumbai. AeSop low-temperature soaping agent and AeKomala cationic softener: cleaner shades, whiter whites, fewer baths." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=mobile-intro2" />
   <link rel="stylesheet" href="product-pages.css?v=20261119e" />
 </head>
@@ -30,7 +30,7 @@
     (() => {
       const loader = document.getElementById("aevaCinematicLoader");
       const skipIntro = matchMedia("(prefers-reduced-motion: reduce)");
-      if (skipIntro.matches) {
+      if (location.hash === "#inquiry" || skipIntro.matches) {
         loader.remove();
         return;
       }

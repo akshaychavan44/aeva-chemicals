@@ -25,6 +25,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html:has(#inquiry:target) { scroll-behavior: auto; }
 body {
   margin: 0;
   font-family: "Jost", system-ui, sans-serif;
@@ -37,10 +38,11 @@ img, video, svg { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 ul, ol { list-style: none; margin: 0; padding: 0; }
 h1, h2, h3, p { margin: 0; }
+input, select, textarea { font-family: inherit; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
 
 .eyebrow {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: "Jost", system-ui, sans-serif;
   font-size: 12px;
   letter-spacing: .18em;
   text-transform: uppercase;
@@ -332,7 +334,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .story__steps { display: grid; margin: 0; padding: 0; list-style: none; }
 .story__steps li { grid-area: 1 / 1; opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .6s var(--ease-out); }
 .story__steps li.is-on { opacity: 1; transform: none; }
-.story__stage { margin: 0 0 14px; font: 500 11px/1.4 "IBM Plex Mono", monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-mute); }
+.story__stage { margin: 0 0 14px; font: 500 11px/1.4 "Jost", system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-mute); }
 .story__steps h3 { margin: 0 0 16px; font-weight: 500; font-size: clamp(30px, 3vw, 46px); line-height: 1.02; letter-spacing: -.025em; }
 .story__steps li > p:last-child { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink-soft); }
 .story__foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 28px; }
@@ -385,7 +387,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .liquid-scene__canvas { opacity: 0; transition: opacity .6s; }
 .liquid-scene.is-ready .liquid-scene__canvas { opacity: 1; }
 .liquid-scene__top, .liquid-scene__bottom { position: absolute; z-index: 1; left: clamp(24px, 3.4vw, 56px); right: clamp(24px, 3.4vw, 56px); display: flex; align-items: center; justify-content: space-between; color: var(--emerald); }
-.liquid-scene__top { top: 30px; font: 400 10px/1.5 "IBM Plex Mono", monospace; letter-spacing: .19em; }
+.liquid-scene__top { top: 30px; font: 400 10px/1.5 "Jost", system-ui, sans-serif; letter-spacing: .19em; }
 .liquid-scene__symbol { color: var(--gold); font-size: 30px; line-height: 1; }
 .liquid-scene__bottom { bottom: var(--caption-bottom, 34px); align-items: flex-end; } /* level with the cards, set by script.js */
 .liquid-scene__bottom p { font-size: clamp(32px, 3.2vw, 48px); letter-spacing: -.025em; line-height: 1.1; font-weight: 400; }
