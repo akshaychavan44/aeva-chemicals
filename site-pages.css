@@ -145,6 +145,7 @@
 /* =========================================================
    WHAT WE DO (products)
    ========================================================= */
+.pr-hero { padding-top: calc(85px + clamp(28px, 4vw, 56px)); }
 .pr-hero__copy .sp-actions { margin-top: 4px; }
 .pr-stats { display: flex; flex-wrap: wrap; gap: 20px 48px; padding-top: 28px; border-top: 1px solid rgba(255, 255, 255, .12); }
 .pr-stats b { display: block; font-size: 32px; font-weight: 500; line-height: 1; color: #fff; }
