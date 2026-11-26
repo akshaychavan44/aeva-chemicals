@@ -222,14 +222,6 @@
   "home_products": {
     "cards": [
       {
-        "name": "AeSop",
-        "label": "Low-temperature soaping agent",
-        "description": "Polymer wash-off chemistry for reactive-dyed cotton. AeSop removes loose dye and helps keep it from redepositing, so shades stay bright and white grounds stay clean.",
-        "link": "aesop.html",
-        "image": "assets/aesop-dropper.webp",
-        "imageAlt": "Clear liquid dropping from a glass pipette into rippling water"
-      },
-      {
         "name": "AeKomala",
         "label": "Cationic textile softener",
         "description": "Fatty amidoamine softening chemistry for textile finishing. AeKomala delivers a silky, smooth handle while helping maintain whiteness, absorbency and reactive shades.",
@@ -238,112 +230,6 @@
         "imageAlt": "Clear, silky gel with small air bubbles, seen from above"
       }
     ]
-  },
-  "page_aesop": {
-    "label": "TEXTILE AUXILIARIES / 01",
-    "name": "AeSop",
-    "category": "Low-temperature soaping agent",
-    "headline": "Clean shades.\nClear advantage.",
-    "description": "Polymer wash-off chemistry for reactive-dyed cotton. AeSop removes loose dye and helps keep it from redepositing, so shades stay bright and white grounds stay clean.",
-    "suppliedAs": "Concentrated liquid",
-    "benefits": [
-      {
-        "title": "Cleaner white grounds",
-        "text": "Helps prevent hydrolysed reactive dye from staining adjacent white fabric."
-      },
-      {
-        "title": "Low-temperature wash-off",
-        "text": "Works from 60 °C, with a starting process at 70 °C subject to plant trial."
-      },
-      {
-        "title": "Low foam in circulation",
-        "text": "Surfactant-free chemistry designed for jet, soft-flow and winch machines."
-      }
-    ],
-    "profile": {
-      "title": "Know your\nchemistry.",
-      "text": "Practical information for your mill, from supplied form to application."
-    },
-    "technical": [
-      {
-        "term": "Supplied form",
-        "value": "Clear to pale amber liquid"
-      },
-      {
-        "term": "Ionic character",
-        "value": "Anionic"
-      },
-      {
-        "term": "Working temperature",
-        "value": "60–95 °C"
-      },
-      {
-        "term": "Compatibility",
-        "value": "Anionic and nonionic auxiliaries"
-      },
-      {
-        "term": "Packaging",
-        "value": "35 kg carboy · 120 kg drum · 1,000 kg IBC"
-      },
-      {
-        "term": "Shelf life",
-        "value": "12 months in sealed original packing"
-      }
-    ],
-    "application": {
-      "title": "A starting point\nfor your process.",
-      "steps": [
-        {
-          "title": "Rinse & neutralise",
-          "text": "Drop the dyebath, cold rinse, then neutralise with acetic acid at 50 °C."
-        },
-        {
-          "title": "Dose & soap",
-          "text": "Dose AeSop in a fresh bath. The brochure starting recipe is 70 °C for 20 minutes."
-        },
-        {
-          "title": "Rinse & finish",
-          "text": "Drain and warm rinse at 50 °C before proceeding to softening."
-        }
-      ],
-      "dosageTitle": "Starting conditions",
-      "dosage": [
-        {
-          "label": "Pale, below 1% o.w.f.",
-          "value": "0.5–0.8 g/L"
-        },
-        {
-          "label": "Medium, 1–3%",
-          "value": "0.8–1.0 g/L"
-        },
-        {
-          "label": "Dark, 3–6%",
-          "value": "1.0–1.3 g/L"
-        },
-        {
-          "label": "Extra dark, above 6%",
-          "value": "1.3–1.5 g/L"
-        }
-      ],
-      "note": "Shade depth, dye class, liquor ratio, water quality and machine type affect the recipe. Confirm dosage and performance in your own plant trial."
-    },
-    "documents": {
-      "title": "Details, ready to hand.",
-      "links": [
-        {
-          "label": "Product brochure",
-          "url": "assets/documents/aesop-brochure.pdf"
-        },
-        {
-          "label": "Request safety data sheet",
-          "url": "mailto:info@aevachemicals.com?subject=AeSop%20Safety%20Data%20Sheet"
-        },
-        {
-          "label": "Ask a technical question",
-          "url": "mailto:info@aevachemicals.com?subject=AeSop%20technical%20enquiry"
-        }
-      ]
-    }
   },
   "page_aekomala": {
     "label": "TEXTILE AUXILIARIES / 02",
