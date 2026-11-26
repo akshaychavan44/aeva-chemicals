@@ -21,6 +21,7 @@
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --gutter: clamp(16px, 4vw, 56px);
   --roll-color: var(--leaf);
+  --section-label-size: clamp(14px, 1.2vw, 17px);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -41,10 +42,12 @@ h1, h2, h3, p { margin: 0; }
 input, select, textarea { font-family: inherit; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
 
-.eyebrow {
+.eyebrow, .sp-eyebrow, .p-label {
   font-family: "Jost", system-ui, sans-serif;
-  font-size: 12px;
-  letter-spacing: .18em;
+  font-size: var(--section-label-size);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--cream-soft);
 }
@@ -352,7 +355,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .story__film:focus-visible, .film__close:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 @media (max-width: 720px) {
   .story__card { top: auto; bottom: 16px; left: 16px; right: 16px; width: auto; transform: none; padding: 20px; border-radius: 20px; }
-  .story__eyebrow { margin-bottom: 14px; padding-bottom: 12px; font-size: 10.5px; letter-spacing: .12em; }
+  .story__eyebrow { margin-bottom: 14px; padding-bottom: 12px; }
   .story__progress i { width: 16px; }
   .story__steps h3 { font-size: 26px; margin-bottom: 10px; }
   .story__steps li > p:last-child { font-size: 15px; }
@@ -372,7 +375,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* Tailor-made: copy on the left, the liquid artwork (script.js) on the right */
 .formulation { display: grid; grid-template-columns: 1fr 1fr; min-height: 100svh; scroll-margin-top: 72px; }
-.formulation .split-panel__text { padding-bottom: clamp(56px, 6vw, 88px); }
+.formulation .split-panel__text { justify-content: flex-start; padding-top: clamp(32px, 4vw, 56px); padding-bottom: clamp(56px, 6vw, 88px); }
 .formulation__lead { text-align: justify; }
 .formulation .tailor { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; max-width: 640px; }
 .tailor > div { background: var(--tint); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 4px; }
@@ -387,7 +390,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .liquid-scene__canvas { opacity: 0; transition: opacity .6s; }
 .liquid-scene.is-ready .liquid-scene__canvas { opacity: 1; }
 .liquid-scene__top, .liquid-scene__bottom { position: absolute; z-index: 1; left: clamp(24px, 3.4vw, 56px); right: clamp(24px, 3.4vw, 56px); display: flex; align-items: center; justify-content: space-between; color: var(--emerald); }
-.liquid-scene__top { top: 30px; font: 400 10px/1.5 "Jost", system-ui, sans-serif; letter-spacing: .19em; }
+.liquid-scene__top { justify-content: flex-end; top: 30px; font: 400 10px/1.5 "Jost", system-ui, sans-serif; letter-spacing: .19em; }
 .liquid-scene__symbol { color: var(--gold); font-size: 30px; line-height: 1; }
 .liquid-scene__bottom { bottom: var(--caption-bottom, 34px); align-items: flex-end; } /* level with the cards, set by script.js */
 .liquid-scene__bottom p { font-size: clamp(32px, 3.2vw, 48px); letter-spacing: -.025em; line-height: 1.1; font-weight: 400; }
@@ -419,7 +422,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .capabilities.is-pinned { height: calc(100svh + var(--cap-steps, 5) * 42svh); }
 .capabilities.is-pinned .cap-stage { position: sticky; top: 0; height: 100svh; }
-.capabilities .eyebrow { font-size: 13px; color: var(--cream-soft); }
+.capabilities .eyebrow { color: var(--cream-soft); }
 .cap-line {
   display: flex; align-items: center; justify-content: center; gap: clamp(10px, 1.3vw, 20px);
   margin-block: calc(var(--row) * 3.6) calc(var(--row) * 3.6 - 32px);

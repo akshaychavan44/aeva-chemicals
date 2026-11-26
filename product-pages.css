@@ -1,5 +1,5 @@
 /* Product pages share the homepage's Jost typography. */
-.p-label { font: 400 11px/1.6 "Jost", system-ui, sans-serif; letter-spacing: .13em; text-transform: uppercase; color: var(--leaf); }
+.p-label { color: var(--leaf); }
 .product-page { background: var(--cream); color: var(--ink); }
 /* emerald header, as on the home page once scrolled */
 .product-page .nav {
