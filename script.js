@@ -511,8 +511,11 @@
       if (Math.round(cur) !== drawn) draw();
       raf = cur === target ? 0 : requestAnimationFrame(tick);
     };
+    // The pour finishes HOLD screens before the section unpins, so the last frame is on
+    // screen before the brush edge at the bottom of .hero-scroll scrolls into view.
+    const HOLD = 0.3;
     const onScroll = () => {
-      const run = wrap.offsetHeight - innerHeight;
+      const run = wrap.offsetHeight - innerHeight * (1 + HOLD);
       const p = run > 0 ? Math.min(1, Math.max(0, -wrap.getBoundingClientRect().top / run)) : 0;
       wrap.style.setProperty("--hero-p", p.toFixed(3));
       target = p * (N - 1);
