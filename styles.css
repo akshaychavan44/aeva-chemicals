@@ -561,6 +561,11 @@ a.footer__region { text-decoration: none; color: inherit; }
   .hero__scroll { display: none; }
   /* phones: the pour fills the frame, so the headline drops to the bottom over a shade */
   .hero { justify-content: flex-end; padding-bottom: 64px; }
+  /* Fill the screen even after the address bar hides (100lvh), so no strip shows under the film.
+     While the bar is showing, the extra height sits behind it, so the text is lifted by that much. */
+  @supports (height: 100lvh) {
+    .hero { height: 100lvh; padding-bottom: calc(64px + 100lvh - 100svh); }
+  }
   /* only a short fade behind the buttons, so the flask stays clear; the headline's shadow keeps it readable */
   .hero__shade { background: linear-gradient(0deg, rgba(11, 68, 52, .7) 0%, rgba(11, 68, 52, .25) 20%, rgba(11, 68, 52, 0) 34%); }
   .hero__title { text-shadow: 0 2px 18px rgba(4, 30, 22, .55); }
