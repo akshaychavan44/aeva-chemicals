@@ -462,11 +462,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .cap-words--lit { margin-top: calc(var(--row) * .07); }
 .cap-words--lit span { color: var(--emerald); }
 @media (max-width: 760px) {
-  .cap-stage { --fs: clamp(19px, 6.2vw, 30px); padding-top: 76px; }
+  .capabilities.is-pinned { height: auto; }
+  .cap-stage, .capabilities.is-pinned .cap-stage {
+    --fs: clamp(19px, 6.2vw, 30px);
+    position: relative;
+    height: auto;
+    min-height: 0;
+    padding-block: 32px 20px;
+  }
   .cap-line { flex-direction: column; gap: 0; margin-block: 28px 0; }
   .cap-side, .cap-side--l { height: auto; display: block; text-align: center; transform: none; }
   .cap-side > span { display: inline; }
-  .cap-reel { margin-block: calc(var(--row) * 4.6); }
+  .cap-reel { margin-block: calc(var(--row) * 3); }
 }
 
 /* =========================================================

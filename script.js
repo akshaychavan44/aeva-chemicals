@@ -698,6 +698,7 @@
      out and comes back in at the bottom. Inside the tilted bar the names move along
      the page's vertical, so the text stays centred in the bar. */
   (() => {
+    const mobileReel = matchMedia("(max-width: 760px)");
     const section = $("#capabilities");
     if (!section) return;
     const faded = $$(".cap-words:not(.cap-words--lit) li", section);
@@ -714,8 +715,13 @@
     function render() {
       queued = false;
       const r = section.getBoundingClientRect();
-      const span = r.height - innerHeight;
-      const p = span > 0 ? Math.min(Math.max(-r.top / span, 0), 1) * (n - 1) : 0;
+      // On phones the section flows with the page. Advance the reel while its
+      // highlighted row travels between the lower and upper viewport edges.
+      const center = bar.getBoundingClientRect();
+      const progress = mobileReel.matches
+        ? (innerHeight * 0.84 - center.top - center.height / 2) / (innerHeight * 0.60)
+        : -r.top / Math.max(1, r.height - innerHeight);
+      const p = Math.min(Math.max(progress, 0), 1) * (n - 1);
       const i = Math.min(Math.floor(p), n - 2);
       const t = ease(p - i);
       const pos = i + t;
