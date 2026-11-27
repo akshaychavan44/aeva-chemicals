@@ -267,6 +267,32 @@
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s" && current) { e.preventDefault(); if (dirty) save(); }
   });
 
+  const inbox = $("#inbox");
+  inbox.addEventListener("toggle", async () => {
+    const list = $("#inquiries");
+    list.replaceChildren();
+    if (!inbox.open) return;
+    list.textContent = "Loading inquiries…";
+    const { data, error } = await request("?action=inquiries");
+    if (!inbox.open) return;
+    if (error || !data.length) {
+      list.textContent = error || "No inquiries yet.";
+      return;
+    }
+    list.replaceChildren(...data.map(({ received_at, details }) => {
+      const item = document.createElement("article");
+      const heading = document.createElement("h3");
+      heading.textContent = details.name;
+      const contact = document.createElement("p");
+      contact.textContent = [new Date(received_at).toLocaleString(), details.company, details.email,
+        details.phone, details.industry].filter(Boolean).join(" · ");
+      const message = document.createElement("p");
+      message.textContent = details.message;
+      item.append(heading, contact, message);
+      return item;
+    }));
+  });
+
   async function startEditor(user) {
     $("#who").textContent = user.email;
     show("screen-editor");
@@ -317,6 +343,8 @@
     if (error) { setStatus(error, "error"); return; }
     dirty = false;
     current = null;
+    inbox.open = false;
+    $("#inquiries").replaceChildren();
     show("screen-login");
   });
 

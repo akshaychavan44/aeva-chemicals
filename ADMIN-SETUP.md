@@ -15,3 +15,7 @@ The editor at `/admin/index.html` manages products and careers. Vercel hosts the
 The login supports one administrator. To rotate the password, change the Vercel secret and redeploy. This also invalidates cookies issued with the previous password. The admin session expires after eight hours.
 
 The GitHub Pages copy serves the built-in content. Test saved edits on the Vercel domain, where the API runs. Keep the database and admin password out of the repository.
+
+### Website inquiries
+
+Open **Website inquiries** in the signed-in admin panel to read submissions, newest first. The form saves to the same Neon database as the CMS. The first submission or inbox visit creates the inquiries table if needed. If your runtime database role has no permission to create tables, run the inquiries table definition in `neon/setup.sql` as the database owner. Submission confirmation means the database accepted the inquiry. Replies can be sent to the email supplied by the visitor.

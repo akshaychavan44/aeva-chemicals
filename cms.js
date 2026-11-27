@@ -40,12 +40,12 @@
       html += groups.map(g => {
         const products = list(g.products);
         const head = `<div class="pr-group__head">${g.number ? `<span class="sp-num">${esc(g.number)}</span>` : ""}<h4>${esc(g.title)}</h4><p>${esc(g.description)}</p><small>${esc(g.countLabel || `${products.length} types`)}</small></div>`;
-        const items = products.map(p => `<article class="pr-product"><h5>${esc(p.name)}</h5><p>${esc(p.description)}</p><a class="sp-link" href="${esc(mail(`Enquiry: ${p.name}`))}">Enquire${ARROW}</a></article>`).join("");
+        const items = products.map(p => `<article class="pr-product"><h5>${esc(p.name)}</h5><p>${esc(p.description)}</p><a class="sp-link" href="${esc(mail(`Inquiry: ${p.name}`))}">Inquire${ARROW}</a></article>`).join("");
         return `<div class="pr-group"${split ? ` data-group="${esc(slug(g.title))}"` : ""}>${head}<div class="pr-products">${items}</div></div>`;
       }).join("");
       const more = ind.more || {};
       if (more.text || more.linkText) {
-        html += `<p class="pr-more">${esc(more.text)}${more.linkText ? ` <a class="sp-link" href="${esc(mail(`Enquiry: ${ind.name} product list`))}">${esc(more.linkText)}${ARROW}</a>` : ""}</p>`;
+        html += `<p class="pr-more">${esc(more.text)}${more.linkText ? ` <a class="sp-link" href="${esc(mail(`Inquiry: ${ind.name} product list`))}">${esc(more.linkText)}${ARROW}</a>` : ""}</p>`;
       }
       panel.innerHTML = html;
     });

@@ -9,3 +9,9 @@ create table if not exists aeva_images (
   mime text not null check (mime in ('image/jpeg', 'image/png', 'image/webp')),
   bytes bytea not null check (octet_length(bytes) between 1 and 3145728)
 );
+
+create table if not exists aeva_inquiries (
+  id uuid primary key,
+  received_at timestamptz not null default now(),
+  details jsonb not null
+);

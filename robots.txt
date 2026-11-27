@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://aeva-chemicals.vercel.app/sitemap.xml

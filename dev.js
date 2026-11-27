@@ -28,7 +28,7 @@ const notFound = (res) => {
   res.end('404 Not Found');
 };
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   let urlPath;
   try {
     urlPath = decodeURIComponent(req.url.split('?')[0]);
@@ -37,6 +37,15 @@ const server = http.createServer((req, res) => {
   }
   // GitHub Pages serves the site under /aeva-chemicals/, so accept that prefix too.
   urlPath = urlPath.replace(/^\/aeva-chemicals(?=\/)/, '');
+
+  if (urlPath === '/api/inquiry') {
+    if (!process.env.DATABASE_URL && fs.existsSync(path.join(ROOT, '.env'))) process.loadEnvFile(path.join(ROOT, '.env'));
+    const { default: inquiry } = await import('./api/inquiry.mjs');
+    return inquiry(req, res);
+  }
+
+  const segments = path.normalize(urlPath).split(path.sep);
+  if (segments.some(segment => segment.startsWith('.'))) return notFound(res);
 
   let filePath = path.join(ROOT, urlPath);
   // Never serve anything outside the project folder.
@@ -53,7 +62,7 @@ const server = http.createServer((req, res) => {
 server.on('error', (err) => {
   if (err.code !== 'EADDRINUSE') throw err;
   console.warn(`  Port ${port} is in use, trying ${port + 1}...`);
-  server.listen(++port);
+  server.listen(++port, '127.0.0.1');
 });
 
-server.listen(port, () => console.log(`\n  ➜  Local:   http://localhost:${port}/\n`));
+server.listen(port, '127.0.0.1', () => console.log(`\n  ➜  Local:   http://127.0.0.1:${port}/\n`));

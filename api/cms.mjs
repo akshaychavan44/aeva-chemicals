@@ -1,6 +1,8 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 
+import { withInquiryTable } from "../lib/inquiries.mjs";
+
 const editableKeys = new Set(["whatwedo", "careers"]);
 const sessionSeconds = 8 * 3600;
 const cookieName = "__Host-aeva-admin";
@@ -35,6 +37,11 @@ export default async function handler(req, res) {
       if (req.query.action === "session") return res.json({ configured, user });
       if (!databaseUrl) return res.status(503).json({ error: "Database is not configured." });
       const sql = neon(databaseUrl);
+      if (req.query.action === "inquiries") {
+        if (!user) return res.status(401).end();
+        const rows = await withInquiryTable(sql, () => sql`select received_at, details from aeva_inquiries order by received_at desc`);
+        return res.json(rows);
+      }
       if (req.query.image) {
         if (typeof req.query.image !== "string" || !/^[0-9a-f-]{36}$/i.test(req.query.image)) return res.status(404).end();
         const [image] = await sql`select mime, encode(bytes, 'base64') as bytes from aeva_images where id::text = ${req.query.image}`;
