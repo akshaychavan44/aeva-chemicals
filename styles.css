@@ -240,7 +240,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    HERO
    ========================================================= */
 /* the hero pins while the pour plays out over the extra scroll */
-.hero-scroll { position: relative; height: 260svh; }
+.hero-scroll { position: relative; height: 260svh; background: var(--emerald); }
+/* phones: the hero is 100svh tall, so when the address bar hides the screen grows taller than it;
+   the emerald behind it fills that strip so the hero runs straight into the brush edge */
 .hero {
   position: sticky; top: 0;
   height: 100svh;
@@ -559,7 +561,9 @@ a.footer__region { text-decoration: none; color: inherit; }
   .hero__scroll { display: none; }
   /* phones: the pour fills the frame, so the headline drops to the bottom over a shade */
   .hero { justify-content: flex-end; padding-bottom: 64px; }
-  .hero__shade { background: linear-gradient(0deg, rgba(11, 68, 52, .92) 0%, rgba(11, 68, 52, .6) 38%, rgba(11, 68, 52, 0) 62%), linear-gradient(180deg, rgba(11, 68, 52, .5) 0%, rgba(11, 68, 52, 0) 18%); }
+  /* only a short fade behind the buttons, so the flask stays clear; the headline's shadow keeps it readable */
+  .hero__shade { background: linear-gradient(0deg, rgba(11, 68, 52, .7) 0%, rgba(11, 68, 52, .25) 20%, rgba(11, 68, 52, 0) 34%); }
+  .hero__title { text-shadow: 0 2px 18px rgba(4, 30, 22, .55); }
 }
 @media (max-width: 560px) {
   .tailor { grid-template-columns: 1fr; }
