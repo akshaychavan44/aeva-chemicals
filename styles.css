@@ -414,11 +414,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: relative; color: var(--cream); overflow: clip;
   background: #000; /* black, so it reads as a new section after the emerald hero */
 }
+.hero-brush-edge {
+  position: absolute;
+  z-index: 2;
+  bottom: -1px;
+  width: 100%;
+  height: clamp(32px, 6vw, 92px);
+  pointer-events: none;
+}
 .cap-stage {
   --fs: clamp(20px, min(3.95vw, calc((100svh - 190px) / 8.2)), 76px); /* as large as the width and the screen height allow */
   --row: calc(var(--fs) * 1.2);
   min-height: 100svh; padding: 88px clamp(16px, 2.6vw, 44px) 56px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
   text-align: center;
 }
 .capabilities.is-pinned { height: calc(100svh + var(--cap-steps, 5) * 42svh); }
