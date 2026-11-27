@@ -28,6 +28,35 @@ const notFound = (res) => {
   res.end('404 Not Found');
 };
 
+// api/cms.mjs is written for Vercel, which parses the query and JSON body and adds
+// res.status() and res.json(). Add the same here so the admin panel works locally.
+// Returns false if it has already answered the request.
+async function addVercelHelpers(req, res) {
+  const LIMIT = 5 * 1024 * 1024; // Vercel's request body limit is about 4.5 MB
+  res.status = code => { res.statusCode = code; return res; };
+  res.json = value => {
+    if (!res.getHeader('Content-Type')) res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.end(JSON.stringify(value));
+    return res;
+  };
+  req.query = Object.fromEntries(new URL(req.url, 'http://localhost').searchParams);
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > LIMIT) { res.status(413).json({ error: 'Request is too large.' }); return false; }
+    chunks.push(chunk);
+  }
+  const text = Buffer.concat(chunks).toString('utf8');
+  if (text && /^application\/json\b/i.test(req.headers['content-type'] || '')) {
+    try { req.body = JSON.parse(text); } catch { res.status(400).json({ error: 'Invalid JSON.' }); return false; }
+  }
+  // The admin API only accepts changes sent from https://<its own address>. This server is
+  // plain http on 127.0.0.1, so treat a request from this same local address as that.
+  if (req.headers.origin === `http://${req.headers.host}`) req.headers.origin = `https://${req.headers.host}`;
+  return true;
+}
+
 const server = http.createServer(async (req, res) => {
   let urlPath;
   try {
@@ -38,10 +67,19 @@ const server = http.createServer(async (req, res) => {
   // GitHub Pages serves the site under /aeva-chemicals/, so accept that prefix too.
   urlPath = urlPath.replace(/^\/aeva-chemicals(?=\/)/, '');
 
-  if (urlPath === '/api/inquiry') {
+  if (urlPath === '/api/inquiry' || urlPath === '/api/cms') {
     if (!process.env.DATABASE_URL && fs.existsSync(path.join(ROOT, '.env'))) process.loadEnvFile(path.join(ROOT, '.env'));
+  }
+
+  if (urlPath === '/api/inquiry') {
     const { default: inquiry } = await import('./api/inquiry.mjs');
     return inquiry(req, res);
+  }
+
+  if (urlPath === '/api/cms') {
+    if (!(await addVercelHelpers(req, res))) return;
+    const { default: cms } = await import('./api/cms.mjs');
+    return cms(req, res);
   }
 
   const segments = path.normalize(urlPath).split(path.sep);

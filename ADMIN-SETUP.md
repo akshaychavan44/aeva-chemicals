@@ -12,7 +12,7 @@ The editor at `/admin/index.html` manages products and careers. Vercel hosts the
 3. Deploy the code containing `api/cms.mjs` on Vercel. The project uses the repository root and the **Other** framework preset. Redeploy whenever the server-side settings change.
 4. Open [the admin panel](https://aeva-chemicals.vercel.app/admin/index.html), sign in and save an edit. Reload the matching public page on the same Vercel domain to check it.
 
-The login supports one administrator. To rotate the password, change the Vercel secret and redeploy. This also invalidates cookies issued with the previous password. The admin session expires after eight hours.
+The login supports one administrator. The admin can change the password under Settings in the admin panel: the new password is stored as an scrypt hash in the `aeva_admin_auth` table and replaces `CMS_ADMIN_PASSWORD` for signing in, and every other session is signed out. If that password is forgotten, delete the row in `aeva_admin_auth` and sign in with `CMS_ADMIN_PASSWORD` again. `CMS_ADMIN_PASSWORD` is still required: it also signs the session cookies, so changing it in Vercel and redeploying signs everyone out. The admin session expires after eight hours.
 
 The GitHub Pages copy serves the built-in content. Test saved edits on the Vercel domain, where the API runs. Keep the database and admin password out of the repository.
 

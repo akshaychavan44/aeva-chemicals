@@ -15,3 +15,11 @@ create table if not exists aeva_inquiries (
   received_at timestamptz not null default now(),
   details jsonb not null
 );
+
+-- One row, created on the first password change in the admin Settings. Holds an scrypt hash
+-- that replaces CMS_ADMIN_PASSWORD for signing in. Delete the row to go back to the Vercel password.
+create table if not exists aeva_admin_auth (
+  id smallint primary key default 1 check (id = 1),
+  password_hash text not null,
+  updated_at timestamptz not null default now()
+);
